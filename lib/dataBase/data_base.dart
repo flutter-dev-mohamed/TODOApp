@@ -2,25 +2,17 @@ import 'package:uuid/uuid.dart';
 
 class MyTask {
   String title;
-  final String ID;
+  final String id;
   String description;
-  bool checked = false;
+  bool isChecked = false;
 
   MyTask({
     required this.title,
     this.description = "",
-  }) : ID = const Uuid().v4();
-
-  void check() {
-    this.checked = true;
-  }
-
-  void Uncheck() {
-    this.checked = false;
-  }
+  }) : id = const Uuid().v4();
 }
 
-List<MyTask> tasks = [
+List<MyTask> listOfTasks = [
   MyTask(
     title: 'Buy groceries',
     description: 'Milk, Bread, Eggs',

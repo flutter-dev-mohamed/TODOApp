@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-//   TODO: finish the theam!
+//   TODO: finish the theme!
+//   TODO: Enable the user to select the app theme!
 
-ThemeData themeData(bool DarckTheam) {
-  const String MyFont = 'ArchitectsDaughter';
+ThemeData themeData() {
+  const String myFont = 'ArchitectsDaughter';
 
   ThemeData themeData = ThemeData(
     appBarTheme: const AppBarTheme(
@@ -11,12 +12,12 @@ ThemeData themeData(bool DarckTheam) {
       titleTextStyle: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20,
-        fontFamily: MyFont,
+        fontFamily: myFont,
         color: Colors.black,
       ),
     ),
     colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFCC93A)),
-    fontFamily: MyFont,
+    fontFamily: myFont,
     useMaterial3: true,
   );
 
