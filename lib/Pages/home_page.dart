@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_again/dataBase/data_base.dart';
-import 'package:test_again/Pages/task_card.dart';
+import 'package:TODOApp/dataBase/task_class_mod.dart';
+import 'package:TODOApp/Pages/task_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,8 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void onChange(MyTask task) {
-    if (task.isChecked) {
+  void onChange(Task task) {
+    if (task.isDone) {
       setState(() {
         listOfTasks.remove(task);
         listOfTasks.add(task);
@@ -36,6 +36,10 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, index) {
           return Taskcard(task: listOfTasks[index], onChange: onChange);
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        // shape: Icon(Icons.add),
       ),
     );
   }

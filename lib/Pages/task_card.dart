@@ -1,5 +1,8 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import '../dataBase/data_base.dart';
+import '../dataBase/task_class_mod.dart';
+import 'task_page.dart';
 
 const TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
@@ -13,8 +16,8 @@ Color? checkBoxColor;
 
 class Taskcard extends StatelessWidget {
   Taskcard({super.key, required this.task, required this.onChange});
-  final Function(MyTask) onChange;
-  MyTask task;
+  final Function(Task) onChange;
+  Task task;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +25,16 @@ class Taskcard extends StatelessWidget {
       key: Key(task.id),
       child: ListTile(
         //  TODO: Add the onTap push -> TaskPage
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TaskPage(
+                        task: task,
+                        taskCheckBox:
+                            TaskCheckBox(task: task, onChange: onChange),
+                      )));
+        },
         //  TODO: Add the checkBox ot leading!
         leading: TaskCheckBox(
           task: task,
@@ -46,8 +59,8 @@ class Taskcard extends StatelessWidget {
 
 class TaskCheckBox extends StatefulWidget {
   TaskCheckBox({super.key, required this.task, required this.onChange});
-  final Function(MyTask) onChange;
-  MyTask task;
+  final Function(Task) onChange;
+  Task task;
 
   @override
   State<TaskCheckBox> createState() => _TaskCheckBoxState();
@@ -57,10 +70,10 @@ class _TaskCheckBoxState extends State<TaskCheckBox> {
   @override
   Widget build(BuildContext context) {
     return Checkbox(
-      value: widget.task.isChecked,
+      value: widget.task.isDone,
       onChanged: (bool? newValue) {
         setState(() {
-          widget.task.isChecked = !widget.task.isChecked;
+          widget.task.isDone = !widget.task.isDone;
           widget.onChange(widget.task);
         });
       },
