@@ -1,3 +1,4 @@
+import 'package:TODOApp/Pages/add_task_page.dart';
 import 'package:flutter/material.dart';
 import 'Pages/home_page.dart';
 import 'theme_data.dart';
@@ -12,7 +13,13 @@ class TODOApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomePage(),
+      // routes: {
+      //   '/': (context) => const HomePage(pageTitle: "ToDo"),
+      //   '/addTask': (context) => AddTaskPopup(addTask: /*addTask func*/, loadTasks: /*loadTasks func*/,),
+      // },
+      home: const HomePage(
+        pageTitle: 'ToDo',
+      ),
       theme: themeData(),
       debugShowCheckedModeBanner: false,
     );

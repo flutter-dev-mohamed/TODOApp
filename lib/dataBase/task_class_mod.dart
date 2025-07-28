@@ -32,16 +32,16 @@ class Task {
     this.id,
     required this.title,
     this.description = "",
-    this.lastEdit = "add the lastEdit!",
-  });
-  // lastEdit = "${DateTime.now().day} ${months[DateTime.now().month - 1]} ${DateTime.now().year} at ${DateTime.now().hour}:${DateTime.now().minute}";
+    String? lastEdit,
+  }) : lastEdit = lastEdit ??
+            "${DateTime.now().day} ${months[DateTime.now().month - 1]} ${DateTime.now().year} at ${DateTime.now().hour}:${DateTime.now().minute}";
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'description': description,
-      'lasEdit': lastEdit,
+      'lastEdit': lastEdit,
       'isDone': isDone,
     };
   }
@@ -55,25 +55,3 @@ class Task {
     );
   }
 }
-
-//
-//
-//
-//
-//
-List<Task> listOfTasks = [
-  Task(
-    title: 'Buy groceries',
-    description: 'Milk, Bread, Eggs',
-  ),
-  Task(
-    title: 'Study Flutter',
-    description: 'Widgets, Themes, State Management',
-  ),
-  Task(title: 'Go for a walk'),
-  Task(
-    title: 'Call Mom',
-    description: 'Check in and say hello',
-  ),
-  Task(title: 'Clean the room'),
-];

@@ -19,11 +19,12 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE tasks(
-        id INTEGER PRIMARY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT,
         lastEdit TEXT,
         isDone INTEGER
+      )
     ''');
   }
 

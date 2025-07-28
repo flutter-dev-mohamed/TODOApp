@@ -15,14 +15,19 @@ const TextStyle subTitleStyle = TextStyle(
 Color? checkBoxColor;
 
 class Taskcard extends StatelessWidget {
-  Taskcard({super.key, required this.task, required this.onChange});
+  Taskcard(
+      {super.key,
+      required this.task,
+      required this.onChange,
+      required this.deleteTask});
+  final Function(Task) deleteTask;
   final Function(Task) onChange;
   Task task;
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key(task.id),
+      key: Key(task.id.toString()),
       child: ListTile(
         //  TODO: Add the onTap push -> TaskPage
         onTap: () {
@@ -35,7 +40,6 @@ class Taskcard extends StatelessWidget {
                             TaskCheckBox(task: task, onChange: onChange),
                       )));
         },
-        //  TODO: Add the checkBox ot leading!
         leading: TaskCheckBox(
           task: task,
           onChange: onChange,
@@ -53,6 +57,11 @@ class Taskcard extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ),
+      onDismissed: (direction) {
+        if (direction == DismissDirection.endToStart) {
+          deleteTask(task);
+        }
+      },
     );
   }
 }
