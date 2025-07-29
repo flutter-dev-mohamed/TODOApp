@@ -22,7 +22,6 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT,
-        lastEdit TEXT,
         isDone INTEGER
       )
     ''');

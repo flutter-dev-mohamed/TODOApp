@@ -25,24 +25,21 @@ class Task {
   String title;
   final int? id;
   String description;
-  String lastEdit;
-  bool isDone = false;
+  bool isDone;
 
   Task({
     this.id,
     required this.title,
     this.description = "",
-    String? lastEdit,
-  }) : lastEdit = lastEdit ??
-            "${DateTime.now().day} ${months[DateTime.now().month - 1]} ${DateTime.now().year} at ${DateTime.now().hour}:${DateTime.now().minute}";
+    this.isDone = false,
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'description': description,
-      'lastEdit': lastEdit,
-      'isDone': isDone,
+      'isDone': isDone ? 1 : 0,
     };
   }
 
@@ -51,7 +48,13 @@ class Task {
       title: map['title'],
       id: map['id'],
       description: map['description'],
-      lastEdit: map['lastEdit'],
+      isDone: map['isDone'] == 1,
     );
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return 'TaskId: $id\nisDone: $isDone\ntitle: $title\ndescription: $description';
   }
 }

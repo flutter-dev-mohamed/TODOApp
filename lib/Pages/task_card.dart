@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
-
+import 'package:TODOApp/gp_widgets/editable_text_widget.dart';
 import 'package:flutter/material.dart';
 import '../dataBase/task_class_mod.dart';
-import 'task_page.dart';
+import 'package:TODOApp/gp_widgets/task_check_box.dart';
 
 const TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
@@ -15,91 +15,58 @@ const TextStyle subTitleStyle = TextStyle(
 Color? checkBoxColor;
 
 class Taskcard extends StatelessWidget {
-  Taskcard(
-      {super.key,
-      required this.task,
-      required this.onChange,
-      required this.deleteTask,
-      required this.updateTask});
+  Taskcard({
+    super.key,
+    required this.task,
+    required this.edit,
+    required this.newTask,
+    required this.onChange,
+    required this.deleteTask,
+    required this.updateTask,
+    required this.addTask,
+  });
 
+  final Function(Task) addTask;
   final Function(Task) deleteTask;
   final Function(Task) updateTask;
   final Function(Task) onChange;
+  final Function(bool) edit;
+  bool newTask;
   Task task;
 
   @override
   Widget build(BuildContext context) {
+    // print(task.title);
+    // print(task.description);
+
     return Column(
       children: [
         Dismissible(
           key: Key(task.id.toString()),
           child: ListTile(
-            //  TODO: Add the onTap push -> TaskPage
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TaskPage(
-                            task: task,
-                            updateTask: updateTask,
-                            taskCheckBox:
-                                TaskCheckBox(task: task, onChange: onChange),
-                          )));
-            },
-            leading: TaskCheckBox(
+            leading: TaskCheckBox(task: task, onChange: onChange),
+            title: EditableTextWidget(
+              initText: task.title,
+              taskTitle: true,
               task: task,
-              onChange: onChange,
+              addTask: addTask,
+              newTask: newTask,
+              edit: edit,
+              updateTask: updateTask,
+              textStyle: titleTextStyle,
             ),
-            title: Text(
-              task.title,
-              style: titleTextStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: Text(
-              task.description,
-              style: subTitleStyle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            subtitle: EditableTextWidget(
+              initText: task.description,
+              task: task,
+              addTask: addTask,
+              newTask: newTask,
+              edit: edit,
+              taskTitle: false,
+              updateTask: updateTask,
             ),
           ),
-          onDismissed: (direction) {
-            if (direction == DismissDirection.endToStart) {
-              deleteTask(task);
-            }
-          },
-        ),
-        const Divider(
-          height: 1,
-          endIndent: 30,
-          indent: 70,
         ),
       ],
-    );
-  }
-}
-
-class TaskCheckBox extends StatefulWidget {
-  TaskCheckBox({super.key, required this.task, required this.onChange});
-  final Function(Task) onChange;
-  Task task;
-
-  @override
-  State<TaskCheckBox> createState() => _TaskCheckBoxState();
-}
-
-class _TaskCheckBoxState extends State<TaskCheckBox> {
-  @override
-  Widget build(BuildContext context) {
-    return Checkbox(
-      value: widget.task.isDone,
-      onChanged: (bool? newValue) {
-        setState(() {
-          widget.task.isDone = !widget.task.isDone;
-          widget.onChange(widget.task);
-        });
-      },
-      shape: const CircleBorder(),
     );
   }
 }
