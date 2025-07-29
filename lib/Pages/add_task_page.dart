@@ -19,19 +19,22 @@ class AddTaskPage extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            child: const Text('cancel'),
+            child: const Center(child: Text('Cancel')),
           ),
         ),
         title: const Text('Add Task'),
         centerTitle: true,
         actions: [
-          GestureDetector(
-            onTap: () {
-              addTask(task);
-              Navigator.pop(context);
-              loadTasks();
-            },
-            child: const Text('Add'),
+          Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: GestureDetector(
+              onTap: () {
+                addTask(task);
+                Navigator.pop(context);
+                loadTasks();
+              },
+              child: const Text('Add'),
+            ),
           ),
         ],
       ),

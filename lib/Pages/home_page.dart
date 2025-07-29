@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     loadTasks();
   }
 
-  void upDataTask(Task task) async {
+  void updateTask(Task task) async {
     dbHelper.updateTask(task);
     loadTasks();
   }
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
   void onChange(Task task) {
     // TODO: implement this in db
     if (task.isDone) {
-      upDataTask(task);
+      updateTask(task);
       setState(() {
         listOfTasks.remove(task);
         listOfTasks.add(task);
@@ -90,6 +90,7 @@ class _HomePageState extends State<HomePage> {
             task: listOfTasks[index],
             onChange: onChange,
             deleteTask: deleteTask,
+            updateTask: updateTask,
           );
         },
       ),
@@ -107,11 +108,10 @@ class _HomePageState extends State<HomePage> {
           );
           // addTask(Task(title: "title"));
         },
-        // shape: const CircleBorder(),
-        // backgroundColor: Colors.transparent,
         elevation: 0,
+        backgroundColor: Colors.transparent,
         child: const Icon(
-          Icons.add,
+          Icons.edit_note_rounded,
           size: 50,
         ),
       ),

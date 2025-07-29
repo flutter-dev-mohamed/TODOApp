@@ -19,49 +19,62 @@ class Taskcard extends StatelessWidget {
       {super.key,
       required this.task,
       required this.onChange,
-      required this.deleteTask});
+      required this.deleteTask,
+      required this.updateTask});
+
   final Function(Task) deleteTask;
+  final Function(Task) updateTask;
   final Function(Task) onChange;
   Task task;
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(task.id.toString()),
-      child: ListTile(
-        //  TODO: Add the onTap push -> TaskPage
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TaskPage(
-                        task: task,
-                        taskCheckBox:
-                            TaskCheckBox(task: task, onChange: onChange),
-                      )));
-        },
-        leading: TaskCheckBox(
-          task: task,
-          onChange: onChange,
+    return Column(
+      children: [
+        Dismissible(
+          key: Key(task.id.toString()),
+          child: ListTile(
+            //  TODO: Add the onTap push -> TaskPage
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TaskPage(
+                            task: task,
+                            updateTask: updateTask,
+                            taskCheckBox:
+                                TaskCheckBox(task: task, onChange: onChange),
+                          )));
+            },
+            leading: TaskCheckBox(
+              task: task,
+              onChange: onChange,
+            ),
+            title: Text(
+              task.title,
+              style: titleTextStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              task.description,
+              style: subTitleStyle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          onDismissed: (direction) {
+            if (direction == DismissDirection.endToStart) {
+              deleteTask(task);
+            }
+          },
         ),
-        title: Text(
-          task.title,
-          style: titleTextStyle,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        const Divider(
+          height: 1,
+          endIndent: 30,
+          indent: 70,
         ),
-        subtitle: Text(
-          task.description,
-          style: subTitleStyle,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-      onDismissed: (direction) {
-        if (direction == DismissDirection.endToStart) {
-          deleteTask(task);
-        }
-      },
+      ],
     );
   }
 }
