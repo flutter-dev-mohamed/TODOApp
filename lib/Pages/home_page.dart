@@ -77,6 +77,14 @@ class _HomePageState extends State<HomePage> {
 
   bool isEditing = false;
   bool newTask = false; //--------------------------new
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    focusNode.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +122,7 @@ class _HomePageState extends State<HomePage> {
           itemCount: listOfTasks.length,
           itemBuilder: (BuildContext context, index) {
             return Taskcard(
+              focusNode: focusNode,
               newTask: newTask,
               task: listOfTasks[index],
               onChange: onChange,

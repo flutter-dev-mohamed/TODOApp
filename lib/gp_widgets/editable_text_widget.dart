@@ -12,6 +12,7 @@ class EditableTextWidget extends StatefulWidget {
     required this.edit,
     required this.newTask,
     required this.addTask,
+    required this.focusNode,
   });
 
   final String initText; //-------------------------------
@@ -22,6 +23,7 @@ class EditableTextWidget extends StatefulWidget {
   final Function(bool) edit;
   final Function(Task) addTask;
   bool newTask;
+  final FocusNode focusNode;
 
   @override
   State<EditableTextWidget> createState() => _EditableTextWidgetState();
@@ -38,6 +40,10 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
     super.initState();
     text = widget.initText; //-------------------------------
     _controller.text = text; //-------------------------------
+    // Wait until after the widget is rendered before requesting focus
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.focusNode.requestFocus();
+    });
   }
 
   void _saveEdit() {
@@ -70,6 +76,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
         ? TextField(
             style: widget.textStyle,
             controller: _controller,
+            focusNode: widget.focusNode,
             maxLines: null,
             minLines: 1,
             keyboardType: TextInputType.multiline,

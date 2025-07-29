@@ -24,6 +24,7 @@ class Taskcard extends StatelessWidget {
     required this.deleteTask,
     required this.updateTask,
     required this.addTask,
+    required this.focusNode,
   });
 
   final Function(Task) addTask;
@@ -31,6 +32,7 @@ class Taskcard extends StatelessWidget {
   final Function(Task) updateTask;
   final Function(Task) onChange;
   final Function(bool) edit;
+  final FocusNode focusNode;
   bool newTask;
   Task task;
 
@@ -52,16 +54,18 @@ class Taskcard extends StatelessWidget {
               addTask: addTask,
               newTask: newTask,
               edit: edit,
+              focusNode: focusNode,
               updateTask: updateTask,
               textStyle: titleTextStyle,
             ),
             subtitle: EditableTextWidget(
               initText: task.description,
+              taskTitle: false,
               task: task,
               addTask: addTask,
               newTask: newTask,
               edit: edit,
-              taskTitle: false,
+              focusNode: focusNode,
               updateTask: updateTask,
             ),
           ),
