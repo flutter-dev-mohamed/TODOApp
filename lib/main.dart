@@ -1,8 +1,6 @@
-import 'package:TODOApp/Pages/add_task_page.dart';
 import 'package:flutter/material.dart';
 import 'Pages/home_page.dart';
 import 'theme_data.dart';
-import 'package:TODOApp/gp_widgets/editable_text_widget.dart';
 
 void main() {
   runApp(const TODOApp());
