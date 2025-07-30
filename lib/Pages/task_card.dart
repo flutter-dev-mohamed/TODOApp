@@ -48,27 +48,44 @@ class Taskcard extends StatelessWidget {
           child: ListTile(
             leading: TaskCheckBox(task: task, onChange: onChange),
             title: EditableTextWidget(
+              //
+              addTask: addTask,
+              newTask: newTask,
+              //
               initText: task.title,
               taskTitle: true,
               task: task,
-              addTask: addTask,
-              newTask: newTask,
               edit: edit,
-              focusNode: focusNode,
               updateTask: updateTask,
               textStyle: titleTextStyle,
             ),
-            subtitle: EditableTextWidget(
-              initText: task.description,
-              taskTitle: false,
-              task: task,
-              addTask: addTask,
-              newTask: newTask,
-              edit: edit,
-              focusNode: focusNode,
-              updateTask: updateTask,
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                EditableTextWidget(
+                  //
+                  addTask: addTask,
+                  //
+                  initText: task.description,
+                  taskTitle: false,
+                  task: task,
+                  edit: edit,
+                  updateTask: updateTask,
+                ),
+                const Divider(
+                  height: 1,
+                ),
+              ],
             ),
           ),
+          onDismissed: (direction) {
+            if (direction == DismissDirection.endToStart) {
+              deleteTask(task);
+              print('endToStart');
+            } else if (direction == DismissDirection.startToEnd) {
+              print('tsartToEnd');
+            }
+          },
         ),
       ],
     );

@@ -49,11 +49,15 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       newTask = false; //--------------------------new
     });
+    print('Task Added:');
+    print(task);
     dbHelper.insertTask(task);
     loadTasks();
   }
 
   void deleteTask(Task task) async {
+    print('Task Deleted: ');
+    print(task);
     dbHelper.deleteTask(task);
     loadTasks();
   }
