@@ -19,7 +19,6 @@ class Taskcard extends StatelessWidget {
     super.key,
     required this.task,
     required this.edit,
-    required this.newTask,
     required this.onChange,
     required this.deleteTask,
     required this.updateTask,
@@ -33,7 +32,6 @@ class Taskcard extends StatelessWidget {
   final Function(Task) onChange;
   final Function(bool) edit;
   final FocusNode focusNode;
-  bool newTask;
   Task task;
 
   @override
@@ -50,7 +48,6 @@ class Taskcard extends StatelessWidget {
             title: EditableTextWidget(
               //
               addTask: addTask,
-              newTask: newTask,
               //
               initText: task.title,
               taskTitle: true,
@@ -61,21 +58,23 @@ class Taskcard extends StatelessWidget {
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                EditableTextWidget(
-                  //
-                  addTask: addTask,
-                  //
-                  initText: task.description,
-                  taskTitle: false,
-                  task: task,
-                  edit: edit,
-                  updateTask: updateTask,
-                ),
-                const Divider(
-                  height: 1,
-                ),
-              ],
+              children: task.newTask
+                  ? []
+                  : [
+                      EditableTextWidget(
+                        //
+                        addTask: addTask,
+                        //
+                        initText: task.description,
+                        taskTitle: false,
+                        task: task,
+                        edit: edit,
+                        updateTask: updateTask,
+                      ),
+                      const Divider(
+                        height: 1,
+                      ),
+                    ],
             ),
           ),
           onDismissed: (direction) {

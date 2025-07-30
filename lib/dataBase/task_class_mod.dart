@@ -26,9 +26,11 @@ class Task {
   final int? id;
   String description;
   bool isDone;
+  bool newTask;
 
   Task({
     this.id,
+    this.newTask = false,
     required this.title,
     this.description = "",
     this.isDone = false,

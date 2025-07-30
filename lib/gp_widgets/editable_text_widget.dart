@@ -7,9 +7,11 @@ class NewTaskTitle extends StatefulWidget {
     required this.edit,
     required this.task,
     required this.addTask,
+    required this.textStyle,
   });
   final Function(Task) addTask;
   final Function(bool) edit;
+  TextStyle textStyle;
 
   Task task;
 
@@ -24,7 +26,6 @@ class _NewTaskTitleState extends State<NewTaskTitle> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     focusNode = FocusNode();
     controller = TextEditingController();
@@ -36,15 +37,16 @@ class _NewTaskTitleState extends State<NewTaskTitle> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     controller.dispose();
     focusNode.dispose();
   }
 
-  void _SaveTask() {
+  void _saveNewTask() {
     widget.task.title = controller.text;
+    widget.task.newTask = false;
     widget.addTask(widget.task);
+    print("NewTaskTilte: ");
     widget.edit(false);
   }
 
@@ -56,10 +58,19 @@ class _NewTaskTitleState extends State<NewTaskTitle> {
         child: Column(
           children: [
             TextField(
+              style: widget.textStyle,
               controller: controller,
               focusNode: focusNode,
-              onSubmitted: (_) => _SaveTask(),
-              onEditingComplete: _SaveTask,
+              maxLines: null,
+              minLines: 1,
+              keyboardType: TextInputType.multiline,
+              onTapOutside: (event) {
+                widget.edit(false);
+                _saveNewTask();
+              },
+
+              // onSubmitted: (_) => _saveNewTask(),
+              onEditingComplete: _saveNewTask,
 
               //
               decoration: const InputDecoration(
@@ -99,7 +110,6 @@ class EditableTextWidget extends StatefulWidget {
     required this.updateTask,
     required this.addTask,
     required this.edit,
-    this.newTask = false,
   });
 
   final String initText; //-------------------------------
@@ -109,7 +119,6 @@ class EditableTextWidget extends StatefulWidget {
   final Function(Task) updateTask;
   final Function(Task) addTask;
   final Function(bool) edit;
-  bool newTask;
 
   @override
   State<EditableTextWidget> createState() => _EditableTextWidgetState();
@@ -147,11 +156,12 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
   Widget build(BuildContext context) {
     Color? defaultTextColor = Theme.of(context).textTheme.bodyMedium?.color;
     Color hinTextColor = (defaultTextColor ?? Colors.black).withOpacity(0.3);
-    if (widget.newTask) {
+    if (widget.task.newTask) {
       return NewTaskTitle(
         task: widget.task,
         edit: widget.edit,
         addTask: widget.addTask,
+        textStyle: widget.textStyle,
       );
     } else {
       return isEditing
@@ -162,7 +172,6 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
               minLines: 1,
               keyboardType: TextInputType.multiline,
               autofocus: true,
-              onSubmitted: (_) => _saveEdit(),
               onEditingComplete: _saveEdit,
               onTapOutside: (event) {
                 setState(() {

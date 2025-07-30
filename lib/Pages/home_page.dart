@@ -46,9 +46,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void addTask(Task task) async {
-    setState(() {
-      newTask = false; //--------------------------new
-    });
     print('Task Added:');
     print(task);
     dbHelper.insertTask(task);
@@ -80,7 +77,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool isEditing = false;
-  bool newTask = false; //--------------------------new
   final FocusNode focusNode = FocusNode();
 
   @override
@@ -100,6 +96,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () {
                     setState(() {
+                      FocusScope.of(context).unfocus();
                       isEditing = false;
                     });
                   },
@@ -127,7 +124,6 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, index) {
             return Taskcard(
               focusNode: focusNode,
-              newTask: newTask,
               task: listOfTasks[index],
               onChange: onChange,
               edit: edit,
@@ -142,8 +138,8 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           //  TODO: add the insert func
           setState(() {
-            newTask = true;
-            listOfTasks.add(Task(title: ''));
+            edit(true);
+            listOfTasks.add(Task(title: '', newTask: true));
           });
         },
         elevation: 0,
