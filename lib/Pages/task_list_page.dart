@@ -6,25 +6,31 @@ import 'package:todo_app/Pages/task_card.dart';
 import 'package:todo_app/dataBase/database_helper.dart';
 
 class TaskListPage extends StatefulWidget {
-  const TaskListPage({
+  TaskListPage({
     super.key,
     required this.dbHelper,
+    required this.groupId,
     required this.pageTitle,
+    required this.listOfTasks,
+    required this.edit,
   });
   final DatabaseHelper dbHelper;
+  final int groupId;
   final String pageTitle;
+  List<Task> listOfTasks;
+  final Function(bool) edit;
   @override
   State<TaskListPage> createState() => _TaskListPageState();
 }
 
 class _TaskListPageState extends State<TaskListPage> {
-  List<Task> listOfTasks = [];
-
   void loadTasks() async {
-    final loadTasks = await widget.dbHelper.getTasks();
+    final loadTasks = await widget.dbHelper.getTasks(groupId: widget.groupId);
     setState(() {
-      listOfTasks = loadTasks;
+      widget.listOfTasks = loadTasks;
       print('Tasks loaded!');
+      print(loadTasks);
+      print(widget.listOfTasks);
     });
   }
 
@@ -59,76 +65,24 @@ class _TaskListPageState extends State<TaskListPage> {
     updateTask(task);
   }
 
-  // callback function to show the done button
-  bool isEditing = false;
-  void edit(bool isEdit) {
-    setState(() {
-      isEditing = isEdit;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.pageTitle),
-        actions: isEditing
-            ? [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      FocusScope.of(context).unfocus();
-                      isEditing = false;
-                    });
-                  },
-                  icon: const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Done',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ]
-            : [],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: ListView.builder(
-          //  TODO: Add the taskCard widget here!
-          itemCount: listOfTasks.length,
-          itemBuilder: (BuildContext context, index) {
-            return Taskcard(
-              task: listOfTasks[index],
-              onChange: onChange,
-              edit: edit,
-              addTask: addTask,
-              deleteTask: deleteTask,
-              updateTask: updateTask,
-              loadTasks: loadTasks,
-            );
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //  TODO: add the insert func
-          setState(() {
-            edit(true);
-            listOfTasks.add(Task(title: '', newTask: true));
-          });
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: ListView.builder(
+        //  TODO: Add the taskCard widget here!
+        itemCount: widget.listOfTasks.length,
+        itemBuilder: (BuildContext context, index) {
+          return Taskcard(
+            task: widget.listOfTasks[index],
+            onChange: onChange,
+            edit: widget.edit,
+            addTask: addTask,
+            deleteTask: deleteTask,
+            updateTask: updateTask,
+            loadTasks: loadTasks,
+          );
         },
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        child: const Icon(
-          Icons.edit_note_rounded,
-          size: 50,
-        ),
       ),
     );
   }

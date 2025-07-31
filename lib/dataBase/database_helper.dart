@@ -14,10 +14,16 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'tasks.db');
 
-    return await openDatabase(path, version: 1, onCreate: _onCreate,
-        onConfigure: (Database db) async {
-      await db.execute('PRAGMA foreign_keys = ON');
-    });
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
+      onConfigure: _onConfigure,
+    );
+  }
+
+  Future<void> _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -38,7 +44,7 @@ class DatabaseHelper {
         FOREIGN KEY (groupId) REFERENCES task_group(id) ON DELETE CASCADE
       )
     ''');
-    insertTaskGroup(TaskGroup(title: "ToDo"));
+    await insertTaskGroup(TaskGroup(title: "ToDo"));
   }
 
   Future<Database?> get database async {
@@ -47,9 +53,13 @@ class DatabaseHelper {
   }
 
 // get_task from db
-  Future<List<Task>> getTasks() async {
+  Future<List<Task>> getTasks({required int groupId}) async {
     final db = await database;
-    final List<Map<String, dynamic>> taskMaps = await db!.query('tasks');
+    final List<Map<String, dynamic>> taskMaps = await db!.query(
+      'tasks',
+      where: 'groupId = ?',
+      whereArgs: [groupId],
+    );
 
     return List.generate(taskMaps.length, (i) => Task.fromMap(taskMaps[i]));
   }

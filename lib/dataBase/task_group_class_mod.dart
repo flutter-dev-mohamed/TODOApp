@@ -25,6 +25,6 @@ class TaskGroup {
 
   @override
   String toString() {
-    return 'TaskGroup: \ntitle: $title\nID: $id';
+    return '\nTaskGroup: \ntitle: $title\nID: $id\n';
   }
 }
