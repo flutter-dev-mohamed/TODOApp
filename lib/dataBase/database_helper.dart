@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:TODOApp/dataBase/task_class_mod.dart';
-import 'package:TODOApp/dataBase/task_group_class_mod.dart';
+import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:todo_app/dataBase/task_group_class_mod.dart';
 
 class DatabaseHelper {
   DatabaseHelper._init();
@@ -73,7 +73,6 @@ class DatabaseHelper {
   Future<int> insertTaskGroup(TaskGroup taskGroup) async {
     final db = await database;
     return await db!.insert('task_group', taskGroup.toMap());
-    ;
   }
 
 // delete a task from db

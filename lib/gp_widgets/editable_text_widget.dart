@@ -1,5 +1,6 @@
-import 'package:TODOApp/dataBase/task_class_mod.dart';
+import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class EditableTextWidget extends StatefulWidget {
   EditableTextWidget({
@@ -11,14 +12,17 @@ class EditableTextWidget extends StatefulWidget {
     required this.updateTask,
     required this.addTask,
     required this.edit,
+    required this.loadTasks,
+    this.thisone = false,
   });
-
+  bool thisone; //-------------------remove
   final String initText; //-------------------------------
   final TextStyle textStyle;
   Task task;
   bool taskTitle;
   final Function(Task) updateTask;
   final Function(Task) addTask;
+  final Function() loadTasks;
   final Function(bool) edit;
 
   @override
@@ -45,10 +49,8 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
         widget.edit(true);
       });
     }
-
     text = widget.initText; //-------------------------------
     _controller.text = text; //-------------------------------
-    // Wait until after the widget is rendered before requesting focus
   }
 
   @override
@@ -65,20 +67,23 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
     isEditing = false; //-------------------------------
     widget.edit(isEditing);
     if (widget.task.newTask) {
-      widget.task.title = _controller.text;
-      widget.task.newTask = false;
-      widget.addTask(widget.task);
-      print("NewTaskTilte: ");
-      widget.edit(false);
+      if (_controller.text.isNotEmpty) {
+        widget.task.title = _controller.text;
+        widget.task.newTask = false;
+        widget.addTask(widget.task);
+      } else {
+        widget.task.newTask = false;
+        widget.edit(false);
+      }
     } else {
       if (widget.taskTitle) {
         widget.task.title = text;
       } else {
         widget.task.description = text;
       }
-      print(widget.task);
       widget.updateTask(widget.task);
     }
+    widget.loadTasks();
   }
 
   @override
@@ -124,9 +129,12 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
                 widget.edit(isEditing);
               });
             },
-            child: Text(
-              text,
-              style: widget.textStyle,
+            child: Container(
+              width: RenderErrorBox.minimumWidth,
+              child: Text(
+                text,
+                style: widget.textStyle,
+              ),
             ),
           );
   }

@@ -38,6 +38,6 @@ class Task {
   @override
   String toString() {
     // TODO: implement toString
-    return 'TaskId: $id\nGroupID: $groupId\nisDone: $isDone\ntitle: $title\ndescription: $description';
+    return 'TaskId: $id\nGroupID: $groupId\nisDone: $isDone\ntitle: $title\nnewTask: $newTask\ndescription: $description';
   }
 }

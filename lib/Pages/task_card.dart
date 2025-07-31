@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
-import 'package:TODOApp/gp_widgets/editable_text_widget.dart';
+import 'package:todo_app/gp_widgets/editable_text_widget.dart';
 import 'package:flutter/material.dart';
 import '../dataBase/task_class_mod.dart';
-import 'package:TODOApp/gp_widgets/task_check_box.dart';
+import 'package:todo_app/gp_widgets/task_check_box.dart';
 
 const TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
@@ -23,22 +23,21 @@ class Taskcard extends StatelessWidget {
     required this.deleteTask,
     required this.updateTask,
     required this.addTask,
-    required this.focusNode,
+    required this.loadTasks,
   });
 
   final Function(Task) addTask;
   final Function(Task) deleteTask;
   final Function(Task) updateTask;
+  final Function() loadTasks;
   final Function(Task) onChange;
   final Function(bool) edit;
-  final FocusNode focusNode;
   Task task;
 
   @override
   Widget build(BuildContext context) {
     // print(task.title);
     // print(task.description);
-
     return Column(
       children: [
         Dismissible(
@@ -46,6 +45,7 @@ class Taskcard extends StatelessWidget {
           child: ListTile(
             leading: TaskCheckBox(task: task, onChange: onChange),
             title: EditableTextWidget(
+              loadTasks: loadTasks,
               //
               addTask: addTask,
               //
@@ -62,6 +62,8 @@ class Taskcard extends StatelessWidget {
                   ? []
                   : [
                       EditableTextWidget(
+                        thisone: true,
+                        loadTasks: loadTasks,
                         //
                         addTask: addTask,
                         //
@@ -80,10 +82,7 @@ class Taskcard extends StatelessWidget {
           onDismissed: (direction) {
             if (direction == DismissDirection.endToStart) {
               deleteTask(task);
-              print('endToStart');
-            } else if (direction == DismissDirection.startToEnd) {
-              print('tsartToEnd');
-            }
+            } else if (direction == DismissDirection.startToEnd) {}
           },
         ),
       ],
