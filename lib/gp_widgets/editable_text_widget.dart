@@ -1,28 +1,30 @@
 import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:todo_app/dataBase/data_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class EditableTextWidget extends StatefulWidget {
   EditableTextWidget({
     super.key,
+    required this.data,
     this.textStyle = const TextStyle(),
     required this.initText,
     required this.task,
     required this.taskTitle,
-    required this.updateTask,
-    required this.addTask,
+    // required this.updateTask,
+    // required this.addTask,
     required this.edit,
-    required this.loadTasks,
-    this.thisone = false,
+    required this.rebuild,
   });
-  bool thisone; //-------------------remove
+
+  Data data;
   final String initText; //-------------------------------
   final TextStyle textStyle;
   Task task;
   bool taskTitle;
-  final Function(Task) updateTask;
-  final Function(Task) addTask;
-  final Function() loadTasks;
+  // final Function(Task) updateTask;
+  // final Function(Task) addTask;
+  final Function() rebuild;
   final Function(bool) edit;
 
   @override
@@ -70,7 +72,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
       if (_controller.text.isNotEmpty) {
         widget.task.title = _controller.text;
         widget.task.newTask = false;
-        widget.addTask(widget.task);
+        widget.data.addTask(widget.task);
       } else {
         widget.task.newTask = false;
         widget.edit(false);
@@ -81,9 +83,9 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
       } else {
         widget.task.description = text;
       }
-      widget.updateTask(widget.task);
+      widget.data.updateTask(widget.task);
     }
-    widget.loadTasks();
+    widget.rebuild();
   }
 
   @override

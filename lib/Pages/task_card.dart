@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/gp_widgets/editable_text_widget.dart';
 import 'package:flutter/material.dart';
 import '../dataBase/task_class_mod.dart';
@@ -17,21 +18,23 @@ Color? checkBoxColor;
 class Taskcard extends StatelessWidget {
   Taskcard({
     super.key,
+    required this.data,
     required this.task,
     required this.edit,
     required this.onChange,
-    required this.deleteTask,
-    required this.updateTask,
-    required this.addTask,
-    required this.loadTasks,
+    // required this.deleteTask,
+    // required this.updateTask,
+    // required this.addTask,
+    required this.rebuild,
   });
 
-  final Function(Task) addTask;
-  final Function(Task) deleteTask;
-  final Function(Task) updateTask;
-  final Function() loadTasks;
+  // final Function(Task) addTask;
+  // final Function(Task) deleteTask;
+  // final Function(Task) updateTask;
+  final Function() rebuild;
   final Function(Task) onChange;
   final Function(bool) edit;
+  Data data;
   Task task;
 
   @override
@@ -45,15 +48,13 @@ class Taskcard extends StatelessWidget {
           child: ListTile(
             leading: TaskCheckBox(task: task, onChange: onChange),
             title: EditableTextWidget(
-              loadTasks: loadTasks,
-              //
-              addTask: addTask,
-              //
+              rebuild: rebuild,
+              data: data,
               initText: task.title,
               taskTitle: true,
               task: task,
               edit: edit,
-              updateTask: updateTask,
+              // updateTask: updateTask,
               textStyle: titleTextStyle,
             ),
             subtitle: Column(
@@ -62,16 +63,12 @@ class Taskcard extends StatelessWidget {
                   ? []
                   : [
                       EditableTextWidget(
-                        thisone: true,
-                        loadTasks: loadTasks,
-                        //
-                        addTask: addTask,
-                        //
+                        data: data,
+                        rebuild: rebuild,
                         initText: task.description,
                         taskTitle: false,
                         task: task,
                         edit: edit,
-                        updateTask: updateTask,
                       ),
                       const Divider(
                         height: 1,
@@ -81,7 +78,7 @@ class Taskcard extends StatelessWidget {
           ),
           onDismissed: (direction) {
             if (direction == DismissDirection.endToStart) {
-              deleteTask(task);
+              data.deleteTask(task);
             } else if (direction == DismissDirection.startToEnd) {}
           },
         ),

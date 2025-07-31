@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/Pages/task_list_page.dart';
-import 'package:todo_app/dataBase/database_helper.dart';
-import 'package:todo_app/dataBase/task_group_class_mod.dart';
+import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,42 +11,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  DatabaseHelper dbHelper = DatabaseHelper();
+  Data data = Data();
 
-  List<TaskGroup> taskGroupsList = [TaskGroup(title: 'title')];
-
-  void loadTaskGroups() async {
-    final loadedTaskGroups = await dbHelper.getTaskGroup();
-    setState(() {
-      taskGroupsList = loadedTaskGroups;
-      print('TaskGroups Loaded!');
-      print(taskGroupsList);
-    });
-  }
-
-  void addTaskGroup(TaskGroup taskGroup) async {
-    dbHelper.insertTaskGroup(taskGroup);
-    print("new Task Group Added!");
-    print(taskGroup);
-  }
-
-  void updateTaskGroup(TaskGroup taskGroup) async {
-    dbHelper.updateTaskGroup(taskGroup);
-    print("Task Group Updated!");
-    print(taskGroup);
-  }
-
-  void deleteTaskGroup(TaskGroup taskGroup) async {
-    dbHelper.deleteTaskGroup(taskGroup);
-    print('Task Group Deleted!');
-    print(taskGroup);
+  Future<void> loadTaskGroups() async {
+    await data.loadTaskGroups();
+    setState(() {}); //  to update the UI
   }
 
   @override
   void initState() {
     print('\ninitState\n');
     super.initState();
-    loadTaskGroups();
     print('\ninitState\n');
   }
 
@@ -59,13 +33,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List<Task> listOfTasks = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(taskGroupsList[0].title),
+        title: Text(data.taskGroupsList[0].title),
         actions: isEditing
             ? [
                 IconButton(
@@ -92,17 +64,16 @@ class _HomePageState extends State<HomePage> {
             : [],
       ),
       body: TaskListPage(
-          dbHelper: dbHelper,
-          groupId: taskGroupsList[0].id!,
+          data: data,
+          groupId: data.taskGroupsList[0].id ?? 1,
           edit: edit,
-          listOfTasks: listOfTasks,
           pageTitle: 'ToDo'),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //  TODO: add the insert func
           setState(() {
             edit(true);
-            listOfTasks.add(Task(title: '', newTask: true));
+            data.listOfTasks.add(Task(title: '', newTask: true));
           });
         },
         elevation: 0,
