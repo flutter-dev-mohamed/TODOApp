@@ -10,23 +10,34 @@ class DatabaseHelper {
 
   Database? _database;
 
-  Future<Database> _initDatabase() async {
+  Future<Database?> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'tasks.db');
-
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-      onConfigure: _onConfigure,
-    );
+    //
+    // print('--------------------------Path------------------------');
+    // print(path);
+    // print('--------------------------Path------------------------');
+    try {
+      return await openDatabase(
+        path,
+        version: 1,
+        onConfigure: _onConfigure,
+        onCreate: _onCreate,
+      );
+    } catch (e) {
+      print(
+          '____________________Database did not open!____________________\n$e');
+    }
   }
 
   Future<void> _onConfigure(Database db) async {
+    print('_onConfigure');
     await db.execute('PRAGMA foreign_keys = ON');
+    print('-----------------------done config-----------------');
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    print('_onCreate');
     await db.execute('''
     CREATE TABLE task_group(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,11 +55,13 @@ class DatabaseHelper {
         FOREIGN KEY (groupId) REFERENCES task_group(id) ON DELETE CASCADE
       )
     ''');
-    await insertTaskGroup(TaskGroup(title: "ToDo"));
+    print(
+        '----------------------------------done creating-----------------------');
   }
 
   Future<Database?> get database async {
     _database ??= await _initDatabase();
+
     return _database;
   }
 
@@ -67,10 +80,25 @@ class DatabaseHelper {
 // get_taskGroup from db
   Future<List<TaskGroup>> getTaskGroup() async {
     final db = await database;
-    final List<Map<String, dynamic>> groupMaps = await db!.query('task_group');
+    List<Map<String, dynamic>> groupMaps = await db!.query('task_group');
 
-    return List.generate(
-        groupMaps.length, (i) => TaskGroup.fromMap(groupMaps[i]));
+    if (groupMaps.isEmpty) {
+      try {
+        print('--groupTasks is Empty--');
+        await insertTaskGroup(TaskGroup(title: 'ToDo'));
+        groupMaps = await db!.query('task_group');
+      } catch (e) {
+        print('groupTasks is empty ---TaskGroup--- not inserted\n$e');
+      }
+    }
+    List<TaskGroup> result =
+        List.generate(groupMaps.length, (i) => TaskGroup.fromMap(groupMaps[i]));
+    print(
+        '\n\n----------------------------------getTaskGroups--------------------------\n\n');
+    print(result);
+    print(
+        '\n\n----------------------------------getTaskGroups--------------------------\n\n');
+    return result;
   }
 
 // insert a task into db

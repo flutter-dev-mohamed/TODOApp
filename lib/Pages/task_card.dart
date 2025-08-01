@@ -19,6 +19,7 @@ class Taskcard extends StatelessWidget {
   Taskcard({
     super.key,
     required this.data,
+    required this.groupId,
     required this.task,
     required this.edit,
     required this.onChange,
@@ -35,6 +36,7 @@ class Taskcard extends StatelessWidget {
   final Function(Task) onChange;
   final Function(bool) edit;
   Data data;
+  int groupId;
   Task task;
 
   @override
@@ -50,6 +52,7 @@ class Taskcard extends StatelessWidget {
             title: EditableTextWidget(
               rebuild: rebuild,
               data: data,
+              groupId: groupId,
               initText: task.title,
               taskTitle: true,
               task: task,
@@ -64,6 +67,7 @@ class Taskcard extends StatelessWidget {
                   : [
                       EditableTextWidget(
                         data: data,
+                        groupId: groupId,
                         rebuild: rebuild,
                         initText: task.description,
                         taskTitle: false,
@@ -78,7 +82,7 @@ class Taskcard extends StatelessWidget {
           ),
           onDismissed: (direction) {
             if (direction == DismissDirection.endToStart) {
-              data.deleteTask(task);
+              data.deleteTask(task: task, rebuild: rebuild);
             } else if (direction == DismissDirection.startToEnd) {}
           },
         ),

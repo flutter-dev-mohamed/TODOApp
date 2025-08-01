@@ -4,25 +4,29 @@ import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({
+    super.key,
+    required this.data,
+  });
+  Data data;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  Data data = Data();
-
-  Future<void> loadTaskGroups() async {
-    await data.loadTaskGroups();
-    setState(() {}); //  to update the UI
+  void loadTasksData(int groupId) async {
+    await widget.data.loadTasks(groupId: groupId);
   }
 
   @override
   void initState() {
-    print('\ninitState\n');
+    print('\n--------------------initState--------------------\n');
     super.initState();
-    print('\ninitState\n');
+    print('\nLoading Tasks Data...\n');
+    loadTasksData(
+        1); //--------------------------------------------------     ADD GROUP ID HEERREEEE!!!!!
+    print('\n--------------------initState--------------------\n');
   }
 
   // callback function to show the done button
@@ -35,9 +39,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.data.taskGroupsList.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(data.taskGroupsList[0].title),
+        title: Text(widget.data.taskGroupsList[0].title),
         actions: isEditing
             ? [
                 IconButton(
@@ -64,8 +71,8 @@ class _HomePageState extends State<HomePage> {
             : [],
       ),
       body: TaskListPage(
-          data: data,
-          groupId: data.taskGroupsList[0].id ?? 1,
+          data: widget.data,
+          groupId: widget.data.taskGroupsList[0].id ?? 1,
           edit: edit,
           pageTitle: 'ToDo'),
       floatingActionButton: FloatingActionButton(
@@ -73,7 +80,7 @@ class _HomePageState extends State<HomePage> {
           //  TODO: add the insert func
           setState(() {
             edit(true);
-            data.listOfTasks.add(Task(title: '', newTask: true));
+            widget.data.listOfTasks.add(Task(title: '', newTask: true));
           });
         },
         elevation: 0,

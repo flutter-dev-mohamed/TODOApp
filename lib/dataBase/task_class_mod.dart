@@ -1,7 +1,7 @@
 class Task {
   String title;
   final int? id;
-  final int? groupId;
+  late int? groupId;
   String description;
   bool isDone;
   bool newTask;

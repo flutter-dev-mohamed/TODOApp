@@ -6,7 +6,7 @@ import 'package:todo_app/Pages/task_card.dart';
 import 'package:todo_app/dataBase/data_class.dart';
 
 class TaskListPage extends StatefulWidget {
-  TaskListPage({
+  const TaskListPage({
     super.key,
     required this.data,
     required this.groupId,
@@ -29,10 +29,11 @@ class _TaskListPageState extends State<TaskListPage> {
   }
 
   void onChange(Task task) {
-    widget.data.updateTask(task);
+    widget.data.updateTask(task: task, rebuild: rebuild);
   }
 
-  void rebuild() {
+  void rebuild() async {
+    await widget.data.loadTasks(groupId: widget.groupId);
     setState(() {});
   }
 
@@ -47,6 +48,7 @@ class _TaskListPageState extends State<TaskListPage> {
           return Taskcard(
             data: widget.data,
             task: widget.data.listOfTasks[index],
+            groupId: widget.groupId,
             onChange: onChange,
             edit: widget.edit,
             rebuild: rebuild,

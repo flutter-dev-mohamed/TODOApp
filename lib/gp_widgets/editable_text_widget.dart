@@ -7,6 +7,7 @@ class EditableTextWidget extends StatefulWidget {
   EditableTextWidget({
     super.key,
     required this.data,
+    required this.groupId,
     this.textStyle = const TextStyle(),
     required this.initText,
     required this.task,
@@ -18,14 +19,15 @@ class EditableTextWidget extends StatefulWidget {
   });
 
   Data data;
+  int groupId;
   final String initText; //-------------------------------
   final TextStyle textStyle;
   Task task;
   bool taskTitle;
   // final Function(Task) updateTask;
   // final Function(Task) addTask;
-  final Function() rebuild;
   final Function(bool) edit;
+  final Function() rebuild;
 
   @override
   State<EditableTextWidget> createState() => _EditableTextWidgetState();
@@ -72,7 +74,10 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
       if (_controller.text.isNotEmpty) {
         widget.task.title = _controller.text;
         widget.task.newTask = false;
-        widget.data.addTask(widget.task);
+        widget.data.addTask(
+            task: widget.task,
+            groupId: widget.groupId,
+            rebuild: widget.rebuild);
       } else {
         widget.task.newTask = false;
         widget.edit(false);
@@ -83,7 +88,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
       } else {
         widget.task.description = text;
       }
-      widget.data.updateTask(widget.task);
+      widget.data.updateTask(task: widget.task, rebuild: widget.rebuild);
     }
     widget.rebuild();
   }

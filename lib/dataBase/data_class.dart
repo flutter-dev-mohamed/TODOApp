@@ -3,13 +3,10 @@ import 'package:todo_app/dataBase/task_group_class_mod.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 
 class Data {
-  List<TaskGroup> taskGroupsList = [TaskGroup(title: 'title')];
+  List<TaskGroup> taskGroupsList = [];
   List<Task> listOfTasks = [];
-  int groupId = 0;
 
   Data.init() {
-    loadTaskGroups();
-    loadTasks();
     print('Data init!');
   }
   static final Data _crud = Data.init();
@@ -19,58 +16,120 @@ class Data {
 
   //  ------------------------TaskGroups CRUD------------------------
   Future<List<TaskGroup>> loadTaskGroups() async {
-    final loadedTaskGroups = await dbHelper.getTaskGroup();
-    print(taskGroupsList);
-    return loadedTaskGroups;
+    try {
+      final loadedTaskGroups = await dbHelper.getTaskGroup();
+      print('taskGroup dataLoaded');
+      taskGroupsList = loadedTaskGroups;
+      print(taskGroupsList);
+
+      return loadedTaskGroups;
+    } catch (e) {
+      print('-----TaskGroups Data Did Not Load!-----\n$e');
+      return [];
+    }
   }
 
-  void addTaskGroup(TaskGroup taskGroup) async {
-    await dbHelper.insertTaskGroup(taskGroup);
-    print("new Task Group Added!");
-    print(taskGroup);
+  void addTaskGroup({
+    required TaskGroup taskGroup,
+    required Function() rebuild, // callback function to update the UI
+  }) async {
+    try {
+      await dbHelper.insertTaskGroup(taskGroup);
+      print("new Task Group Added!");
+      print(taskGroup);
+      rebuild();
+    } catch (e) {
+      print('-----TaskGroup Did Not Get Added-----\n$e');
+    }
   }
 
-  void updateTaskGroup(TaskGroup taskGroup) async {
-    await dbHelper.updateTaskGroup(taskGroup);
-    print("Task Group Updated!");
-    print(taskGroup);
+  void updateTaskGroup({
+    required TaskGroup taskGroup,
+    required Function() rebuild,
+  }) async {
+    try {
+      await dbHelper.updateTaskGroup(taskGroup);
+      print("Task Group Updated!");
+      print(taskGroup);
+      rebuild();
+    } catch (e) {
+      print('-----Task Group Did Not Get Updated!-----\n$e');
+    }
   }
 
-  void deleteTaskGroup(TaskGroup taskGroup) async {
-    await dbHelper.deleteTaskGroup(taskGroup);
-    print('Task Group Deleted!');
-    print(taskGroup);
+  void deleteTaskGroup({
+    required TaskGroup taskGroup,
+    required Function rebuild,
+  }) async {
+    try {
+      await dbHelper.deleteTaskGroup(taskGroup);
+      print('Task Group Deleted!');
+      print(taskGroup);
+      rebuild();
+    } catch (e) {
+      print('-----TaskGroup DId Not Get Updated!-----\n$e');
+    }
   }
 
   //  ------------------------Task CRUD------------------------
-  Future<List<Task>> loadTasks() async {
-    final loadTasks = await dbHelper.getTasks(groupId: groupId);
+  Future<List<Task>> loadTasks({required int groupId}) async {
+    try {
+      print('tasks data is Loading...');
+      final loadTasks = await dbHelper.getTasks(groupId: groupId);
 
-    listOfTasks = loadTasks;
-    print('Tasks loaded!');
-    print(loadTasks);
-    print(listOfTasks);
-    return loadTasks;
+      listOfTasks = loadTasks;
+      print('Tasks loaded!');
+      print(loadTasks);
+      print(listOfTasks);
+      return loadTasks;
+    } catch (e) {
+      print('\n-----Tasks data did not load-----\n$e');
+      return [Task(title: 'Fix Loading Task Data')];
+    }
   }
 
-  void addTask(Task task) async {
-    print('Task Added:');
-    print(task);
-    await dbHelper.insertTask(task);
-    loadTasks();
+  void addTask({
+    required Task task,
+    required int groupId,
+    required Function() rebuild, // callback function to update the UI
+  }) async {
+    try {
+      print('---------Adding Your Task');
+      task.groupId = groupId;
+      print(task);
+      await dbHelper.insertTask(task);
+      print('Task Added:');
+      rebuild();
+    } catch (e) {
+      print('Task Did Not Get Added\n$e');
+    }
   }
 
-  void deleteTask(Task task) async {
-    print('Task Deleted: ');
-    print(task);
-    await dbHelper.deleteTask(task);
-    loadTasks();
+  void deleteTask({
+    required Task task,
+    required Function() rebuild,
+  }) async {
+    try {
+      await dbHelper.deleteTask(task);
+      print('Task Deleted: ');
+      print(task);
+      rebuild();
+    } catch (e) {
+      print('-----Task Did Not Get Deleted-----\n$e');
+    }
   }
 
-  void updateTask(Task task) async {
-    print(
-        'updateTask: taskId: ${task.id} TaskGroupId: ${task.groupId} isDone: ${task.isDone}');
-    await dbHelper.updateTask(task);
-    loadTasks();
+  void updateTask({
+    required Task task,
+    required Function() rebuild,
+  }) async {
+    try {
+      print(
+          'updateTask: taskId: ${task.id} TaskGroupId: ${task.groupId} isDone: ${task.isDone}');
+      await dbHelper.updateTask(task);
+      rebuild();
+    } catch (e) {
+      print('-----Task Did Not Update-----\n$e');
+    }
   }
 }
