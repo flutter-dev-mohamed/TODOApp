@@ -8,7 +8,7 @@ ThemeData themeData() {
 
   ThemeData themeData = ThemeData(
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFFCC93A),
+      backgroundColor: Color(0xFF0F9D8A),
       titleTextStyle: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20,
@@ -16,7 +16,7 @@ ThemeData themeData() {
         color: Colors.black,
       ),
     ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFCC93A)),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x0F9D8AFF)),
     fontFamily: myFont,
     useMaterial3: true,
   );

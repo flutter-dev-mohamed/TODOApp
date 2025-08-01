@@ -10,12 +10,12 @@ class TaskListPage extends StatefulWidget {
     super.key,
     required this.data,
     required this.groupId,
-    required this.pageTitle,
+    // required this.pageTitle,
     required this.edit,
   });
   final Data data;
   final int groupId;
-  final String pageTitle;
+  // final String pageTitle;
   final Function(bool) edit;
   @override
   State<TaskListPage> createState() => _TaskListPageState();

@@ -3,8 +3,8 @@ import 'package:todo_app/dataBase/task_group_class_mod.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 
 class Data {
-  List<TaskGroup> taskGroupsList = [];
-  List<Task> listOfTasks = [];
+  List<TaskGroup> taskGroupsList = [TaskGroup(title: 'Default TaskGroup')];
+  List<Task> listOfTasks = [Task(title: 'Default Task')];
 
   Data.init() {
     print('Data init!');
@@ -78,6 +78,16 @@ class Data {
       final loadTasks = await dbHelper.getTasks(groupId: groupId);
 
       listOfTasks = loadTasks;
+      if (listOfTasks.length == 0) {
+        print(
+            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
+        print(
+            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
+        print(
+            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
+        print(
+            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
+      }
       print('Tasks loaded!');
       print(loadTasks);
       print(listOfTasks);
