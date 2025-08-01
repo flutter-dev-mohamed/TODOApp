@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void loadTasksData({required int groupId}) async {
+  Future<void> loadTasksData({required int groupId}) async {
     await widget.data.loadTasks(groupId: groupId);
   }
 
@@ -43,11 +43,20 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void getResultFromDrawer(
+      {required int groupId, required int groupIndex}) async {
+    await loadTasksData(groupId: groupId);
+    setState(() {
+      widget.groupId = groupId;
+      widget.groupIndex = groupIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (widget.data.listOfTasks.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (widget.data.listOfTasks.isEmpty) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.data.taskGroupsList[widget.groupIndex].title),
@@ -76,7 +85,10 @@ class _HomePageState extends State<HomePage> {
               ]
             : [],
       ),
-      drawer: TaskgroupsDrawer(data: widget.data),
+      drawer: TaskgroupsDrawer(
+        data: widget.data,
+        getResultFromDrawer: getResultFromDrawer,
+      ),
       body: TaskListPage(
         data: widget.data,
         groupId: widget.data.taskGroupsList[widget.groupIndex].id!,
