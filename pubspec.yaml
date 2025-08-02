@@ -40,6 +40,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   sqflite: ^2.4.1
   path: ^1.9.0
+  focused_menu: ^1.0.5
+  flutter_slidable: ^3.1.2
 
 
 dev_dependencies:
@@ -84,6 +86,9 @@ flutter:
     - family: ArchitectsDaughter
       fonts:
         - asset: resources/fonts/ArchitectsDaughter-Regular.ttf
+    - family: lemonada
+      fonts:
+        - asset: resources/fonts/Lemonada-VariableFont_wght.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

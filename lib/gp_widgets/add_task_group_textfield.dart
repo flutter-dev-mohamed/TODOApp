@@ -36,10 +36,14 @@ class _AddTaskGroupTextfieldState extends State<AddTaskGroupTextfield> {
   }
 
   void _saveTaskGroup() {
-    widget.taskGroup.title = _controller.text;
-    widget.taskGroup.newTaskGroup = false;
-    widget.data
-        .addTaskGroup(taskGroup: widget.taskGroup, rebuild: widget.rebuild);
+    if (_controller.text.isNotEmpty) {
+      widget.taskGroup.title = _controller.text;
+      widget.taskGroup.newTaskGroup = false;
+      widget.data
+          .addTaskGroup(taskGroup: widget.taskGroup, rebuild: widget.rebuild);
+    } else {
+      widget.rebuild();
+    }
   }
 
   @override

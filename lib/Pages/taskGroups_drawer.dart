@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_group_class_mod.dart';
 import 'package:todo_app/gp_widgets/add_task_group_textfield.dart';
+import 'package:todo_app/gp_widgets/task_group_button.dart';
 
 class TaskgroupsDrawer extends StatefulWidget {
   TaskgroupsDrawer({
@@ -18,9 +19,25 @@ class TaskgroupsDrawer extends StatefulWidget {
 }
 
 class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
+  final ScrollController scrollController = ScrollController();
+
   void rebuild() async {
     await widget.data.loadTaskGroups();
     setState(() {});
+  }
+
+  void deleteTaskGroup({
+    required TaskGroup taskGroup,
+    required Function rebuild,
+  }) {
+    widget.data.deleteTaskGroup(taskGroup: taskGroup, rebuild: rebuild);
+  }
+
+  void updateTaskGroup({
+    required TaskGroup taskGroup,
+    required Function() rebuild,
+  }) {
+    widget.data.updateTaskGroup(taskGroup: taskGroup, rebuild: rebuild);
   }
 
   @override
@@ -32,35 +49,36 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
             Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.data.taskGroupsList.length,
-                  itemBuilder: (context, index) {
-                    return widget.data.taskGroupsList[index].newTaskGroup
-                        ? AddTaskGroupTextfield(
-                            data: widget.data,
-                            taskGroup: widget.data.taskGroupsList[index],
-                            rebuild: rebuild,
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              try {
-                                widget.getResultFromDrawer(
-                                  groupId:
-                                      widget.data.taskGroupsList[index].id!,
-                                  groupIndex: index,
-                                );
-                                Navigator.pop(context);
-                              } catch (e) {
-                                print(
-                                    '\n\n\nTaskGroupDrawer: TextButton Check widget.getResultFromDrawer\n\n\n');
-                              }
-                            },
-                            child:
-                                Text(widget.data.taskGroupsList[index].title),
-                          );
-                  },
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  left: 8.0,
+                  right: 8.0,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 80.0),
+                  child: ListView.builder(
+                    controller: scrollController,
+                    // shrinkWrap: true,
+                    itemCount: widget.data.taskGroupsList.length,
+                    itemBuilder: (context, index) {
+                      TaskGroup taskGroup = widget.data.taskGroupsList[index];
+                      return taskGroup.newTaskGroup
+                          ? AddTaskGroupTextfield(
+                              data: widget.data,
+                              taskGroup: taskGroup,
+                              rebuild: rebuild,
+                            )
+                          : TaskGroupButton(
+                              label: taskGroup.title,
+                              getResultFromDrawer: widget.getResultFromDrawer,
+                              groupIndex: index,
+                              taskGroup: taskGroup,
+                              delete: deleteTaskGroup,
+                              updateTaskGroup: updateTaskGroup,
+                              rebuild: rebuild,
+                            );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -75,6 +93,13 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
                     setState(() {
                       widget.data.taskGroupsList
                           .add(TaskGroup(title: '', newTaskGroup: true));
+                    });
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      scrollController.animateTo(
+                        scrollController.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
                     });
                   },
                   child: const Row(

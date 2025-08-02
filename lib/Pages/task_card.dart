@@ -4,10 +4,12 @@ import 'package:todo_app/gp_widgets/editable_text_widget.dart';
 import 'package:flutter/material.dart';
 import '../dataBase/task_class_mod.dart';
 import 'package:todo_app/gp_widgets/task_check_box.dart';
+import 'package:todo_app/gp_widgets/delete_task_button.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 const TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
-  fontSize: 18,
+  // fontSize: 18,
 );
 const TextStyle subTitleStyle = TextStyle(
   fontSize: 13,
@@ -39,54 +41,64 @@ class Taskcard extends StatelessWidget {
   int groupId;
   Task task;
 
+  void deleteTask() async {
+    data.deleteTask(task: task, rebuild: rebuild);
+  }
+
   @override
   Widget build(BuildContext context) {
     // print(task.title);
     // print(task.description);
-    return Column(
-      children: [
-        Dismissible(
-          key: Key(task.id.toString()),
-          child: ListTile(
-            leading: TaskCheckBox(task: task, onChange: onChange),
-            title: EditableTextWidget(
-              rebuild: rebuild,
-              data: data,
-              groupId: groupId,
-              initText: task.title,
-              taskTitle: true,
-              task: task,
-              edit: edit,
-              // updateTask: updateTask,
-              textStyle: titleTextStyle,
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: task.newTask
-                  ? []
-                  : [
-                      EditableTextWidget(
-                        data: data,
-                        groupId: groupId,
-                        rebuild: rebuild,
-                        initText: task.description,
-                        taskTitle: false,
-                        task: task,
-                        edit: edit,
-                      ),
-                      const Divider(
-                        height: 1,
-                      ),
-                    ],
-            ),
+    return SildableTaskCard(context);
+  }
+
+  Widget SildableTaskCard(context) {
+    return Slidable(
+      closeOnScroll: true,
+      endActionPane: ActionPane(
+        motion: DrawerMotion(),
+        children: [
+          DeleteTaskButton(
+            key: key,
+            delete: deleteTask,
           ),
-          onDismissed: (direction) {
-            if (direction == DismissDirection.endToStart) {
-              data.deleteTask(task: task, rebuild: rebuild);
-            } else if (direction == DismissDirection.startToEnd) {}
-          },
+        ],
+      ),
+      child: ClipRRect(
+        child: ListTile(
+          leading: TaskCheckBox(task: task, onChange: onChange),
+          title: EditableTextWidget(
+            rebuild: rebuild,
+            data: data,
+            groupId: groupId,
+            initText: task.title,
+            taskTitle: true,
+            task: task,
+            edit: edit,
+            // updateTask: updateTask,
+            textStyle: titleTextStyle,
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: task.newTask
+                ? []
+                : [
+                    EditableTextWidget(
+                      data: data,
+                      groupId: groupId,
+                      rebuild: rebuild,
+                      initText: task.description,
+                      taskTitle: false,
+                      task: task,
+                      edit: edit,
+                    ),
+                    const Divider(
+                      height: 1,
+                    ),
+                  ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }

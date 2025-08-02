@@ -3,8 +3,8 @@ import 'package:todo_app/dataBase/task_group_class_mod.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 
 class Data {
-  List<TaskGroup> taskGroupsList = [TaskGroup(title: 'Default TaskGroup')];
-  List<Task> listOfTasks = [Task(title: 'Default Task')];
+  List<TaskGroup> taskGroupsList = [];
+  List<Task> listOfTasks = [];
 
   Data.init() {
     print('Data init!');

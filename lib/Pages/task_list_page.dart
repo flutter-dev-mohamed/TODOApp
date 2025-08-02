@@ -12,11 +12,13 @@ class TaskListPage extends StatefulWidget {
     required this.groupId,
     // required this.pageTitle,
     required this.edit,
+    required this.scrollController,
   });
   final Data data;
   final int groupId;
   // final String pageTitle;
   final Function(bool) edit;
+  final ScrollController scrollController;
   @override
   State<TaskListPage> createState() => _TaskListPageState();
 }
@@ -42,12 +44,14 @@ class _TaskListPageState extends State<TaskListPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: ListView.builder(
-        //  TODO: Add the taskCard widget here!
+        controller: widget.scrollController,
         itemCount: widget.data.listOfTasks.length,
         itemBuilder: (BuildContext context, index) {
+          Task task = widget.data.listOfTasks[index];
           return Taskcard(
+            key: ValueKey(task.id),
             data: widget.data,
-            task: widget.data.listOfTasks[index],
+            task: task,
             groupId: widget.groupId,
             onChange: onChange,
             edit: widget.edit,

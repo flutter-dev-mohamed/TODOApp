@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 //   TODO: Enable the user to select the app theme!
 
 ThemeData themeData() {
-  const String myFont = 'ArchitectsDaughter';
+  const String myFont = 'lemonada';
 
   ThemeData themeData = ThemeData(
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF0F9D8A),
+      // backgroundColor: Color(0xFF0F9D8A),
       titleTextStyle: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20,
@@ -16,12 +16,10 @@ ThemeData themeData() {
         color: Colors.black,
       ),
     ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x0F9D8AFF)),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x947FE7D0)),
     fontFamily: myFont,
     useMaterial3: true,
   );
 
   return themeData;
 }
-
-// theme: ,
