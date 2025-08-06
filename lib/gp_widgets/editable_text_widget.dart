@@ -96,7 +96,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
   @override
   Widget build(BuildContext context) {
     Color? defaultTextColor = Theme.of(context).textTheme.bodyMedium?.color;
-    Color hinTextColor = (defaultTextColor ?? Colors.black).withOpacity(0.3);
+    Color hinTextColor = (defaultTextColor ?? Colors.black).withOpacity(0.2);
     return (isEditing || widget.task.newTask)
         ? TextField(
             style: widget.textStyle,
@@ -138,10 +138,18 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
             },
             child: Container(
               width: RenderErrorBox.minimumWidth,
-              child: Text(
-                text,
-                style: widget.textStyle,
-              ),
+              child: !widget.taskTitle && text.isEmpty
+                  ? Text(
+                      'Add note',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: hinTextColor,
+                      ),
+                    )
+                  : Text(
+                      text,
+                      style: widget.textStyle,
+                    ),
             ),
           );
   }

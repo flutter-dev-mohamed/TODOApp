@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:todo_app/dataBase/task_group_class_mod.dart';
-import 'package:todo_app/gp_widgets/task_group_edit_button.dart';
 
 class TaskGroupButton extends StatelessWidget {
   TaskGroupButton({
@@ -14,21 +13,22 @@ class TaskGroupButton extends StatelessWidget {
     required this.delete,
     required this.updateTaskGroup,
     required this.rebuild,
+    required this.editing,
+    required this.index,
+    required this.undoDeleteTaskGroup,
   });
-  String label;
+
   void Function({required int groupId, required int groupIndex})
       getResultFromDrawer;
-  final Function({
-    required TaskGroup taskGroup,
-    required Function() rebuild,
-  }) delete;
-  final Function({
-    required TaskGroup taskGroup,
-    required Function() rebuild,
-  }) updateTaskGroup;
+  final Function({required TaskGroup taskGroup}) undoDeleteTaskGroup;
+  final Function({required TaskGroup taskGroup}) delete;
+  final Function({required TaskGroup taskGroup}) updateTaskGroup;
   final Function() rebuild;
+  final Function(bool, int) editing;
+  String label;
   TaskGroup taskGroup;
   int groupIndex;
+  int index;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +39,14 @@ class TaskGroupButton extends StatelessWidget {
         onPressed: () {},
         menuItems: [
           edit(
+            context: context,
             taskGroup: taskGroup,
-            updateTaskGroup: updateTaskGroup,
           ),
           deleteButton(
-              context: context,
-              delete: delete,
-              taskGroup: taskGroup,
-              rebuild: rebuild),
+            context: context,
+            delete: delete,
+            taskGroup: taskGroup,
+          ),
         ],
         blurBackgroundColor: const Color(0xFFD5E2DE),
         child: SizedBox(
@@ -79,20 +79,35 @@ class TaskGroupButton extends StatelessWidget {
     required BuildContext context,
     required Function({
       required TaskGroup taskGroup,
-      required Function() rebuild,
     }) delete,
     required TaskGroup taskGroup,
-    required Function() rebuild,
+    // required Function() rebuild,
   }) {
     return FocusedMenuItem(
       backgroundColor: Colors.red[400],
       trailingIcon: const Icon(Icons.delete),
       title: const Text('Delete'),
       onPressed: () {
-        delete(taskGroup: taskGroup, rebuild: rebuild);
+        delete(taskGroup: taskGroup);
         try {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('${taskGroup.title} deleted'),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('${taskGroup.title} deleted'),
+                TextButton(
+                  onPressed: () {
+                    undoDeleteTaskGroup(taskGroup: taskGroup);
+                  },
+                  child: const Row(
+                    children: [
+                      Text('Undo'),
+                      // Icon(Icons.undo),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ));
         } catch (e, s) {
           print(s);
@@ -102,20 +117,15 @@ class TaskGroupButton extends StatelessWidget {
   }
 
   FocusedMenuItem edit(
-      {required Function({
-        required TaskGroup taskGroup,
-        required Function() rebuild,
-      }) updateTaskGroup,
-      required TaskGroup taskGroup}) {
+      {required BuildContext context, required TaskGroup taskGroup}) {
     return FocusedMenuItem(
       backgroundColor: const Color(0xFFD5E2DE),
       trailingIcon: const Icon(Icons.edit_rounded),
       title: const Text('Edit'),
       onPressed: () {
-        TaskGroupEditButton(
-          taskGroup: taskGroup,
-          updateTaskGroup: updateTaskGroup,
-        );
+        // AddTaskGroupTextfield(data: data, taskGroup: taskGroup, rebuild: rebuild);
+        print('1111111111111111111111111');
+        editing(true, index);
       },
     );
   }

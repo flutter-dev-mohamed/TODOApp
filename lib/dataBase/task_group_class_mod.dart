@@ -2,11 +2,13 @@ class TaskGroup {
   String title;
   int? id;
   bool newTaskGroup;
+  bool isEditing;
 
   TaskGroup({
     this.id,
     required this.title,
     this.newTaskGroup = false,
+    this.isEditing = false,
   });
 
   Map<String, dynamic> toMap() {

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 
 class TaskCheckBox extends StatefulWidget {
-  TaskCheckBox({super.key, required this.task, required this.onChange});
+  TaskCheckBox({
+    super.key,
+    required this.task,
+    required this.onChange,
+  });
   final Function(Task) onChange;
   Task task;
 
@@ -11,17 +15,24 @@ class TaskCheckBox extends StatefulWidget {
 }
 
 class _TaskCheckBoxState extends State<TaskCheckBox> {
+  //  for the confetti
+  GlobalKey checkboxKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return Checkbox(
-      value: widget.task.isDone,
-      onChanged: (bool? newValue) {
-        setState(() {
-          widget.task.isDone = !widget.task.isDone;
-          widget.onChange(widget.task);
-        });
-      },
-      shape: const CircleBorder(),
+    print(Theme.of(context).primaryColor.withOpacity(0.8));
+    return Container(
+      key: checkboxKey,
+      child: Checkbox(
+        value: widget.task.isDone,
+        onChanged: (bool? newValue) {
+          setState(() {
+            widget.task.isDone = !widget.task.isDone;
+            widget.onChange(widget.task);
+          });
+        },
+        shape: const CircleBorder(),
+      ),
     );
   }
 }

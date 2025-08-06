@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_group_class_mod.dart';
-import 'package:todo_app/gp_widgets/add_task_group_textfield.dart';
+import 'package:todo_app/gp_widgets/task_group_text_field.dart';
 import 'package:todo_app/gp_widgets/task_group_button.dart';
+import 'package:todo_app/gp_widgets/edit_task_group_button.dart';
 
 class TaskgroupsDrawer extends StatefulWidget {
   TaskgroupsDrawer({
@@ -28,16 +29,25 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
 
   void deleteTaskGroup({
     required TaskGroup taskGroup,
-    required Function rebuild,
   }) {
     widget.data.deleteTaskGroup(taskGroup: taskGroup, rebuild: rebuild);
   }
 
   void updateTaskGroup({
     required TaskGroup taskGroup,
-    required Function() rebuild,
   }) {
     widget.data.updateTaskGroup(taskGroup: taskGroup, rebuild: rebuild);
+  }
+
+  void editing(bool editing, int index) {
+    print('222222222222222222222222222222\n\n$editing\n$index\n\n');
+    setState(() {
+      widget.data.taskGroupsList[index].isEditing = editing;
+    });
+  }
+
+  void undoDeleteTaskGroup({required TaskGroup taskGroup}) {
+    widget.data.addTaskGroup(taskGroup: taskGroup, rebuild: rebuild);
   }
 
   @override
@@ -68,15 +78,26 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
                               taskGroup: taskGroup,
                               rebuild: rebuild,
                             )
-                          : TaskGroupButton(
-                              label: taskGroup.title,
-                              getResultFromDrawer: widget.getResultFromDrawer,
-                              groupIndex: index,
-                              taskGroup: taskGroup,
-                              delete: deleteTaskGroup,
-                              updateTaskGroup: updateTaskGroup,
-                              rebuild: rebuild,
-                            );
+                          : widget.data.taskGroupsList[index].isEditing
+                              ? EditTaskGroupButton(
+                                  key: ValueKey(taskGroup.id),
+                                  taskGroup: taskGroup,
+                                  updateTaskGroup: updateTaskGroup,
+                                  rebuild: rebuild)
+                              : TaskGroupButton(
+                                  key: ValueKey(taskGroup.id),
+                                  label: taskGroup.title,
+                                  getResultFromDrawer:
+                                      widget.getResultFromDrawer,
+                                  groupIndex: index,
+                                  taskGroup: taskGroup,
+                                  delete: deleteTaskGroup,
+                                  updateTaskGroup: updateTaskGroup,
+                                  undoDeleteTaskGroup: undoDeleteTaskGroup,
+                                  rebuild: rebuild,
+                                  editing: editing,
+                                  index: index,
+                                );
                     },
                   ),
                 ),

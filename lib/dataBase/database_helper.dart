@@ -72,6 +72,7 @@ class DatabaseHelper {
       'tasks',
       where: 'groupId = ?',
       whereArgs: [groupId],
+      orderBy: 'id ASC',
     );
 
     return List.generate(taskMaps.length, (i) => Task.fromMap(taskMaps[i]));
@@ -80,7 +81,10 @@ class DatabaseHelper {
 // get_taskGroup from db
   Future<List<TaskGroup>> getTaskGroup() async {
     final db = await database;
-    List<Map<String, dynamic>> groupMaps = await db!.query('task_group');
+    List<Map<String, dynamic>> groupMaps = await db!.query(
+      'task_group',
+      orderBy: 'id ASC',
+    );
 
     if (groupMaps.isEmpty) {
       try {

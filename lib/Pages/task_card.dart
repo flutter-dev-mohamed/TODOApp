@@ -6,6 +6,7 @@ import '../dataBase/task_class_mod.dart';
 import 'package:todo_app/gp_widgets/task_check_box.dart';
 import 'package:todo_app/gp_widgets/delete_task_button.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:confetti/confetti.dart';
 
 const TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
@@ -25,15 +26,9 @@ class Taskcard extends StatelessWidget {
     required this.task,
     required this.edit,
     required this.onChange,
-    // required this.deleteTask,
-    // required this.updateTask,
-    // required this.addTask,
     required this.rebuild,
   });
 
-  // final Function(Task) addTask;
-  // final Function(Task) deleteTask;
-  // final Function(Task) updateTask;
   final Function() rebuild;
   final Function(Task) onChange;
   final Function(bool) edit;
@@ -43,6 +38,10 @@ class Taskcard extends StatelessWidget {
 
   void deleteTask() async {
     data.deleteTask(task: task, rebuild: rebuild);
+  }
+
+  void undoDeleteTask() {
+    data.addTask(task: task, groupId: groupId, rebuild: rebuild);
   }
 
   @override
@@ -61,42 +60,44 @@ class Taskcard extends StatelessWidget {
           DeleteTaskButton(
             key: key,
             delete: deleteTask,
+            undoDeleteTask: undoDeleteTask,
           ),
         ],
       ),
-      child: ClipRRect(
-        child: ListTile(
-          leading: TaskCheckBox(task: task, onChange: onChange),
-          title: EditableTextWidget(
-            rebuild: rebuild,
-            data: data,
-            groupId: groupId,
-            initText: task.title,
-            taskTitle: true,
-            task: task,
-            edit: edit,
-            // updateTask: updateTask,
-            textStyle: titleTextStyle,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: task.newTask
-                ? []
-                : [
-                    EditableTextWidget(
-                      data: data,
-                      groupId: groupId,
-                      rebuild: rebuild,
-                      initText: task.description,
-                      taskTitle: false,
-                      task: task,
-                      edit: edit,
-                    ),
-                    const Divider(
-                      height: 1,
-                    ),
-                  ],
-          ),
+      child: ListTile(
+        leading: TaskCheckBox(
+          task: task,
+          onChange: onChange,
+        ),
+        title: EditableTextWidget(
+          rebuild: rebuild,
+          data: data,
+          groupId: groupId,
+          initText: task.title,
+          taskTitle: true,
+          task: task,
+          edit: edit,
+          // updateTask: updateTask,
+          textStyle: titleTextStyle,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: task.newTask
+              ? []
+              : [
+                  EditableTextWidget(
+                    data: data,
+                    groupId: groupId,
+                    rebuild: rebuild,
+                    initText: task.description,
+                    taskTitle: false,
+                    task: task,
+                    edit: edit,
+                  ),
+                  const Divider(
+                    height: 1,
+                  ),
+                ],
         ),
       ),
     );
