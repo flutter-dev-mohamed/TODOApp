@@ -7,21 +7,18 @@ import 'package:todo_app/gp_widgets/edit_task_group_button.dart';
 import 'package:todo_app/settings/settings_button.dart';
 import '../dataBase/task_class_mod.dart';
 
-class TaskgroupsDrawer extends StatefulWidget {
-  TaskgroupsDrawer({
+class Test extends StatefulWidget {
+  Test({
     super.key,
     required this.data,
-    required this.getResultFromDrawer,
   });
   Data data;
-  void Function({required int groupId, required int groupIndex})
-      getResultFromDrawer;
 
   @override
-  State<TaskgroupsDrawer> createState() => _TaskgroupsDrawerState();
+  State<Test> createState() => _TestState();
 }
 
-class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
+class _TestState extends State<Test> {
   final ScrollController scrollController = ScrollController();
 
   void rebuild() async {
@@ -90,9 +87,9 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
+    return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-      child: SafeArea(
+      body: SafeArea(
         child: Stack(
           children: [
             Align(
@@ -117,26 +114,11 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
                               taskGroup: taskGroup,
                               rebuild: rebuild,
                             )
-                          : widget.data.taskGroupsList[index].isEditing
-                              ? EditTaskGroupButton(
-                                  key: ValueKey(taskGroup.id),
-                                  taskGroup: taskGroup,
-                                  updateTaskGroup: updateTaskGroup,
-                                  rebuild: rebuild)
-                              : TaskGroupButton(
-                                  key: ValueKey(taskGroup.id),
-                                  label: taskGroup.title,
-                                  getResultFromDrawer:
-                                      widget.getResultFromDrawer,
-                                  groupIndex: index,
-                                  taskGroup: taskGroup,
-                                  delete: deleteTaskGroup,
-                                  updateTaskGroup: updateTaskGroup,
-                                  undoDeleteTaskGroup: undoDeleteTaskGroup,
-                                  rebuild: rebuild,
-                                  editing: editing,
-                                  index: index,
-                                );
+                          : EditTaskGroupButton(
+                              key: ValueKey(taskGroup.id),
+                              taskGroup: taskGroup,
+                              updateTaskGroup: updateTaskGroup,
+                              rebuild: rebuild);
                     },
                   ),
                 ),
@@ -148,76 +130,56 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 41,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Expanded(
-                        flex: 1,
-                        child: SettingsButton(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Expanded(
+                      flex: 1,
+                      child: SettingsButton(),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            widget.data.taskGroupsList
+                                .add(TaskGroup(title: '', newTaskGroup: true));
+                          });
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            scrollController.animateTo(
+                              scrollController.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              'Add a task group',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                            Icon(
+                              Icons.format_list_bulleted_add,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ],
+                        ),
                       ),
-                      VerticalDivider(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        thickness: 1,
-                        width: 1,
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: AddTaskGroupButton(),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  //
-  Widget AddTaskGroupButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(23),
-            bottomRight: Radius.circular(23),
-          ),
-        ),
-      ),
-      onPressed: () {
-        setState(() {
-          widget.data.taskGroupsList
-              .add(TaskGroup(title: '', newTaskGroup: true));
-        });
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        });
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            'Add a task group',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-          ),
-          Icon(
-            Icons.format_list_bulleted_add,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-        ],
       ),
     );
   }

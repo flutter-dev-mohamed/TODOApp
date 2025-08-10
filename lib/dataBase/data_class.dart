@@ -15,6 +15,7 @@ class Data {
   DatabaseHelper dbHelper = DatabaseHelper();
 
   //  ------------------------TaskGroups CRUD------------------------
+
   Future<List<TaskGroup>> loadTaskGroups() async {
     try {
       final loadedTaskGroups = await dbHelper.getTaskGroup();
@@ -72,6 +73,7 @@ class Data {
   }
 
   //  ------------------------Task CRUD------------------------
+
   Future<List<Task>> loadTasks({required int groupId}) async {
     try {
       print('tasks data is Loading...');
@@ -79,10 +81,6 @@ class Data {
 
       listOfTasks = loadTasks;
       if (listOfTasks.length == 0) {
-        print(
-            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
-        print(
-            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
         print(
             '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
         print(
@@ -104,11 +102,11 @@ class Data {
     required Function() rebuild, // callback function to update the UI
   }) async {
     try {
-      print('---------Adding Your Task');
+      print('\n\n---------Adding Your Task');
       task.groupId = groupId;
       print(task);
       await dbHelper.insertTask(task);
-      print('Task Added:');
+      print('Task Added:\n');
       rebuild();
     } catch (e) {
       print('Task Did Not Get Added\n$e');
@@ -121,11 +119,11 @@ class Data {
   }) async {
     try {
       await dbHelper.deleteTask(task);
-      print('Task Deleted: ');
+      print('\n\nTask Deleted: ');
       print(task);
       rebuild();
     } catch (e) {
-      print('-----Task Did Not Get Deleted-----\n$e');
+      print('\n-----Task Did Not Get Deleted-----\n$e');
     }
   }
 

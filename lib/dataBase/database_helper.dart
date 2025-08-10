@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:todo_app/dataBase/task_group_class_mod.dart';
+import 'package:todo_app/settings/settings.dart';
 
 class DatabaseHelper {
   DatabaseHelper._init();
@@ -13,10 +14,6 @@ class DatabaseHelper {
   Future<Database?> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'tasks.db');
-    //
-    // print('--------------------------Path------------------------');
-    // print(path);
-    // print('--------------------------Path------------------------');
     try {
       return await openDatabase(
         path,
@@ -38,14 +35,15 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     print('_onCreate');
-    await db.execute('''
+    try {
+      await db.execute('''
     CREATE TABLE task_group(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL
       )
     ''');
 
-    await db.execute('''
+      await db.execute('''
       CREATE TABLE tasks(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
@@ -55,8 +53,20 @@ class DatabaseHelper {
         FOREIGN KEY (groupId) REFERENCES task_group(id) ON DELETE CASCADE
       )
     ''');
-    print(
-        '----------------------------------done creating-----------------------');
+
+      await db.execute('''
+      CREATE TABLE settings(
+        autoDeleteDoneTask INTEGER,
+        dynamicBrightness INTEGER,
+        darkMode INTEGER,
+        sendNotifications INTEGER
+      )
+    ''');
+      print(
+          '----------------------------------done creating-----------------------');
+    } catch (e) {
+      print('\n\nError in _onCreate (databaseHelper.dart): \n$e\n\n');
+    }
   }
 
   Future<Database?> get database async {
@@ -64,6 +74,45 @@ class DatabaseHelper {
 
     return _database;
   }
+  //---------------------------------------CRUD---------------------------------------
+
+  //---------------------------------------settings
+
+  Future<Settings> getSettings() async {
+    try {
+      print('\n\n-------------------getting settings-------------------\n\n');
+      final db = await database;
+      List<Map<String, dynamic>> settingsMap = await db!.query('settings');
+
+      if (settingsMap.isEmpty) {
+        Settings _settings = Settings();
+        await db.insert('settings', _settings.toMap());
+
+        settingsMap = await db.query('settings');
+      }
+
+      final settings = Settings.fromMap(settingsMap[0]);
+      print('\n\n---------------------got settings---------------------\n\n');
+      print(settings);
+      return settings;
+    } catch (e) {
+      print(
+          '\n\nError in getSettings (databaseHelper.dart): $settings\n$e\n\n');
+      return Settings();
+    }
+  }
+
+  Future<int> updateSettings(Settings settings) async {
+    try {
+      final db = await database;
+      return await db!.update('settings', settings.toMap());
+    } catch (e) {
+      print('\n\nError in _onCreate (databaseHelper.dart): \n$e\n\n');
+      return 105;
+    }
+  }
+
+  //---------------------------------------settings
 
 // get_task from db
   Future<List<Task>> getTasks({required int groupId}) async {
@@ -90,7 +139,10 @@ class DatabaseHelper {
       try {
         print('--groupTasks is Empty--');
         await insertTaskGroup(TaskGroup(title: 'ToDo'));
-        groupMaps = await db!.query('task_group');
+        groupMaps = await db!.query(
+          'task_group',
+          orderBy: 'id ASC',
+        );
       } catch (e) {
         print('groupTasks is empty ---TaskGroup--- not inserted\n$e');
       }

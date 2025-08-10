@@ -3,6 +3,8 @@ import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:todo_app/dataBase/task_group_class_mod.dart';
 
+import '../dataBase/task_class_mod.dart';
+
 class TaskGroupButton extends StatelessWidget {
   TaskGroupButton({
     super.key,
@@ -20,7 +22,9 @@ class TaskGroupButton extends StatelessWidget {
 
   void Function({required int groupId, required int groupIndex})
       getResultFromDrawer;
-  final Function({required TaskGroup taskGroup}) undoDeleteTaskGroup;
+  final Function(
+      {required TaskGroup taskGroup,
+      required List<Task> tasksToDelete}) undoDeleteTaskGroup;
   final Function({required TaskGroup taskGroup}) delete;
   final Function({required TaskGroup taskGroup}) updateTaskGroup;
   final Function() rebuild;
@@ -48,12 +52,19 @@ class TaskGroupButton extends StatelessWidget {
             taskGroup: taskGroup,
           ),
         ],
-        blurBackgroundColor: const Color(0xFFD5E2DE),
+        blurBackgroundColor: Theme.of(context).shadowColor,
         child: SizedBox(
           width: double.infinity,
           child: TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor:
+                  Theme.of(context).colorScheme.onSecondaryContainer,
+            ),
             onPressed: () {
               try {
+                print(
+                    '\n\n-------------------------------\n$taskGroup\n-------------------------------------\n\n');
+
                 getResultFromDrawer(
                   groupId: taskGroup.id!,
                   groupIndex: groupIndex,
@@ -68,6 +79,9 @@ class TaskGroupButton extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+              ),
             ),
           ),
         ),
@@ -83,32 +97,56 @@ class TaskGroupButton extends StatelessWidget {
     required TaskGroup taskGroup,
     // required Function() rebuild,
   }) {
+    List<Task> tasksToDelete;
     return FocusedMenuItem(
-      backgroundColor: Colors.red[400],
-      trailingIcon: const Icon(Icons.delete),
+      backgroundColor: Theme.of(context).colorScheme.errorContainer,
+      // backgroundColor: Colors.red[400],
+      trailingIcon: Icon(
+        Icons.delete,
+        color: Theme.of(context).colorScheme.error,
+      ),
       title: const Text('Delete'),
-      onPressed: () {
-        delete(taskGroup: taskGroup);
+      onPressed: () async {
+        tasksToDelete = await delete(taskGroup: taskGroup);
+        print(
+            '\n\n-------------------------------deleted group-------------------------------------\n\n');
+        print(tasksToDelete);
+        print(
+            '\n\n-------------------------------deleted group-------------------------------------\n\n');
         try {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('${taskGroup.title} deleted'),
-                TextButton(
-                  onPressed: () {
-                    undoDeleteTaskGroup(taskGroup: taskGroup);
-                  },
-                  child: const Row(
-                    children: [
-                      Text('Undo'),
-                      // Icon(Icons.undo),
-                    ],
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${taskGroup.title} deleted',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
                   ),
-                ),
-              ],
+                  TextButton(
+                    onPressed: () {
+                      undoDeleteTaskGroup(
+                          taskGroup: taskGroup, tasksToDelete: tasksToDelete);
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Undo',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        // Icon(Icons.undo),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ));
+          );
         } catch (e, s) {
           print(s);
         }
@@ -119,8 +157,12 @@ class TaskGroupButton extends StatelessWidget {
   FocusedMenuItem edit(
       {required BuildContext context, required TaskGroup taskGroup}) {
     return FocusedMenuItem(
-      backgroundColor: const Color(0xFFD5E2DE),
-      trailingIcon: const Icon(Icons.edit_rounded),
+      // backgroundColor: const Color(0xFFD5E2DE),
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      trailingIcon: Icon(
+        Icons.edit_rounded,
+        color: Theme.of(context).colorScheme.primary,
+      ),
       title: const Text('Edit'),
       onPressed: () {
         // AddTaskGroupTextfield(data: data, taskGroup: taskGroup, rebuild: rebuild);

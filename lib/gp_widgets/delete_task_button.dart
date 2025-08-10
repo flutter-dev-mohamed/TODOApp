@@ -14,31 +14,42 @@ class DeleteTaskButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SlidableAction(
+      backgroundColor: Theme.of(context).colorScheme.errorContainer,
+      foregroundColor: Theme.of(context).colorScheme.error,
+      borderRadius: BorderRadius.circular(12),
+      autoClose: true,
+      icon: Icons.delete_rounded,
+      label: 'Delete',
       onPressed: (context) {
         delete();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Task deleted'),
+                Text(
+                  'Task deleted',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                  ),
+                ),
                 TextButton(
                   onPressed: () {
                     undoDeleteTask();
                   },
-                  child: const Text('Undo'),
+                  child: Text(
+                    'Undo',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         );
       },
-      backgroundColor: const Color(0xFFD5E2DE),
-      foregroundColor: Colors.red[400],
-      borderRadius: BorderRadius.circular(12),
-      autoClose: true,
-      icon: Icons.delete_rounded,
-      label: 'Delete',
     );
   }
 }

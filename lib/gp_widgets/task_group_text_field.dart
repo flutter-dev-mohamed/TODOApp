@@ -57,6 +57,21 @@ class _AddTaskGroupTextfieldState extends State<AddTaskGroupTextfield> {
       onTapOutside: (event) {
         widget.rebuild();
       },
+
+      //
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+      ),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.onSecondaryContainer,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(16),
+          ),
+        ),
+      ),
     );
   }
 }

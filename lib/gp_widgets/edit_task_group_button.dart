@@ -53,6 +53,7 @@ class _EditTaskGroupButtonState extends State<EditTaskGroupButton> {
     if (_controller.text != oldName) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -61,6 +62,9 @@ class _EditTaskGroupButtonState extends State<EditTaskGroupButton> {
                 child: Text(
                   'Renamed to: ${widget.taskGroup.title}',
                   overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                  ),
                 ),
               ),
               Flexible(
@@ -72,9 +76,14 @@ class _EditTaskGroupButtonState extends State<EditTaskGroupButton> {
                       taskGroup: widget.taskGroup,
                     );
                   },
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Text('Undo'),
+                      Text(
+                        'Undo',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
                       // Icon(Icons.undo),
                     ],
                   ),
@@ -101,8 +110,18 @@ class _EditTaskGroupButtonState extends State<EditTaskGroupButton> {
       },
 
       //
-      decoration: const InputDecoration(
-        border: InputBorder.none,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+      ),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.onSecondaryContainer,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(16),
+          ),
+        ),
       ),
     );
   }

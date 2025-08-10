@@ -35,4 +35,6 @@ class _TaskCheckBoxState extends State<TaskCheckBox> {
       ),
     );
   }
+
+  // Widget customBox() {}
 }

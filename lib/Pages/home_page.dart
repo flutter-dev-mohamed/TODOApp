@@ -3,8 +3,6 @@ import 'package:todo_app/Pages/task_list_page.dart';
 import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:todo_app/Pages/taskGroups_drawer.dart';
-import 'package:confetti/confetti.dart';
-import 'dart:math';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -63,6 +61,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        '\n\n\n\n###################################################################\n\n\n\n');
+    print(Theme.of(context).colorScheme.primary);
+    print(Theme.of(context).colorScheme.secondary);
+    print(Theme.of(context).colorScheme.tertiary);
+    print(Theme.of(context).colorScheme.error);
+    print(
+        '\n\n\n\n###################################################################\n\n\n\n');
     if (!dataLoaded) {
       return const Scaffold(
         body: Center(
@@ -74,7 +80,16 @@ class _HomePageState extends State<HomePage> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text(widget.data.taskGroupsList[widget.groupIndex].title),
+            iconTheme: IconThemeData(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            title: Text(
+              widget.data.taskGroupsList[widget.groupIndex].title,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
             actions: isEditing
                 ? [
                     IconButton(
@@ -84,12 +99,13 @@ class _HomePageState extends State<HomePage> {
                           isEditing = false;
                         });
                       },
-                      icon: const Center(
+                      icon: Center(
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Done',
                             style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
