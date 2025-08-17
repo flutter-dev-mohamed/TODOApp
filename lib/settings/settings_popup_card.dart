@@ -67,7 +67,7 @@ class _SettingsPopupCardState extends State<SettingsPopupCard> {
                       ),
                       const Divider(height: 10),
                       LottieToggleButton(
-                        label: 'Auto-Delete Completed Tasks',
+                        label: 'Auto-Delete',
                         value: settings.autoDeleteDoneTask,
                         labelStyle: TextStyle(
                           fontWeight: FontWeight.bold,

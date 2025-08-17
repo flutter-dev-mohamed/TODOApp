@@ -72,6 +72,7 @@ class Taskcard extends StatelessWidget {
               leading: CustomCheckbox(
                 task: task,
                 onChange: onChange,
+                deleteTask: deleteTask,
               ),
               title: EditableTextWidget(
                 rebuild: rebuild,
