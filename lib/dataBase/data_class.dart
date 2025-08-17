@@ -86,9 +86,7 @@ class Data {
         print(
             '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
       }
-      print('Tasks loaded!');
-      print(loadTasks);
-      print(listOfTasks);
+      print('-\nTasks loaded!\n-');
       return loadTasks;
     } catch (e) {
       print('\n-----Tasks data did not load-----\n$e');

@@ -61,14 +61,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        '\n\n\n\n###################################################################\n\n\n\n');
-    print(Theme.of(context).colorScheme.primary);
-    print(Theme.of(context).colorScheme.secondary);
-    print(Theme.of(context).colorScheme.tertiary);
-    print(Theme.of(context).colorScheme.error);
-    print(
-        '\n\n\n\n###################################################################\n\n\n\n');
     if (!dataLoaded) {
       return const Scaffold(
         body: Center(
@@ -101,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       icon: Center(
                         child: Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
                             'Done',
                             style: TextStyle(

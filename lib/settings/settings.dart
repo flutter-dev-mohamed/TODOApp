@@ -39,7 +39,6 @@ class Settings {
   }
 
   ThemeData getAppTheme(BuildContext context) {
-    print('\n\n---------------------getAppTheme---------------------\n\n');
     TextTheme textTheme = createTextTheme(context, "Roboto", "Lexend");
     MaterialTheme theme = MaterialTheme(textTheme);
 

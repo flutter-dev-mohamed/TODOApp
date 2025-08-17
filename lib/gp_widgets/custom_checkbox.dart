@@ -11,9 +11,13 @@ class CustomCheckbox extends StatefulWidget {
     required this.task,
     required this.onChange,
     required this.deleteTask,
+    required this.delete,
+    required this.cancel,
   });
   final Function(Task) onChange;
   final Function deleteTask;
+  final Function delete;
+  final Function cancel;
   Task task;
 
   @override
@@ -24,29 +28,34 @@ class _CustomCheckboxState extends State<CustomCheckbox>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
-  Timer? _deleteTimer;
-
-  void setTimer() {
-    _deleteTimer?.cancel();
-    _deleteTimer = null;
-
-    if (settings.autoDeleteDoneTask) {
-      if (widget.task.isDone) {
-        print(
-            '\n\n\n------------------Timer Started---------------------\n\n\n');
-        _deleteTimer = Timer.periodic(
-          const Duration(seconds: 5),
-          (timer) {
-            widget.deleteTask();
-            timer.cancel();
-          },
-        );
-      } else {
-        print('\n\n------------Timer Canceled--------------------\n\n');
-        _deleteTimer?.cancel();
-      }
-    }
-  }
+  // Timer? _deleteTimer;
+  // int _deleteTime = 5;
+  //
+  // void delete() {
+  //   print('-\n\n\n-\n\n');
+  //   print('delete is called! ');
+  //   cancel();
+  //   print('-\n\n\n-\n\n');
+  //
+  //   _deleteTimer = Timer.periodic(
+  //     const Duration(seconds: 1),
+  //     (timer) {
+  //       print('timer = $_deleteTime');
+  //       _deleteTime--;
+  //       if (_deleteTime <= 0) {
+  //         cancel();
+  //         widget.deleteTask();
+  //       }
+  //     },
+  //   );
+  // }
+  //
+  // void cancel() {
+  //   print('canceled');
+  //   _deleteTimer?.cancel();
+  //   _deleteTimer = null;
+  //   _deleteTime = 5;
+  // }
 
   @override
   void initState() {
@@ -63,7 +72,7 @@ class _CustomCheckboxState extends State<CustomCheckbox>
 
   @override
   void dispose() {
-    _deleteTimer?.cancel();
+    // _deleteTimer?.cancel();
     _animationController.dispose();
     super.dispose();
   }
@@ -76,12 +85,14 @@ class _CustomCheckboxState extends State<CustomCheckbox>
 
         if (widget.task.isDone) {
           await _animationController.forward();
-          setTimer();
+          // widget.onChange(widget.task);
+
+          widget.delete();
         } else {
-          setTimer();
+          widget.cancel();
           await _animationController.reverse();
         }
-        widget.onChange(widget.task);
+        // widget.onChange(widget.task); // this is what rebuilds the parent widget
       },
       child: Lottie.asset(
         'assets/Success.json',
@@ -89,4 +100,11 @@ class _CustomCheckboxState extends State<CustomCheckbox>
       ),
     );
   }
+
+  // @override
+  // void didUpdateWidget(covariant CustomCheckbox oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   print('widget updated!!\n\n\n');
+  //   widget.task.deleteTimer.rebuild(widget.task.id!);
+  // }
 }
