@@ -3,6 +3,8 @@ import 'package:todo_app/theme/theme.dart';
 import 'package:todo_app/theme/util.dart';
 import 'package:todo_app/dataBase/database_helper.dart';
 
+import 'notification.dart';
+
 class Settings {
   Settings({
     this.autoDeleteDoneTask = true,
@@ -54,6 +56,21 @@ class Settings {
 
   void setChangeTheme({required Function rebuild}) {
     changeTheme = rebuild;
+  }
+
+  void sendNotification({
+    required int id,
+    required String? title,
+    String? body,
+  }) {
+    if (!sendNotifications) return;
+    print('-\n\n\nSending Notification...\n\n\n');
+
+    Notifications().sendNotification(
+      id: id,
+      title: title,
+      body: body,
+    );
   }
 
   Map<String, dynamic> toMap() {

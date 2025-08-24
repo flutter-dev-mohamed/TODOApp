@@ -35,8 +35,6 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
   }) async {
     List<Task> tasksToDelete;
     tasksToDelete = await widget.data.loadTasks(groupId: taskGroup.id!);
-    print(
-        '\n\n-------------------------------group deleted-----------------****--------------------\n\n');
 
     for (Task task in tasksToDelete) {
       if (tasksToDelete.isNotEmpty) {
@@ -48,16 +46,12 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
     }
 
     widget.data.deleteTaskGroup(taskGroup: taskGroup, rebuild: rebuild);
-    print(
-        '\n\n-------------------------------group deleted-----------------****--------------------\n\n');
 
     return tasksToDelete;
   }
 
   void undoDeleteTaskGroup(
       {required TaskGroup taskGroup, required List<Task> tasksToDelete}) async {
-    print(
-        '\n\n-------------------------------Undeleted------------------@@@@@@-------------------\n\n');
     widget.data.addTaskGroup(taskGroup: taskGroup, rebuild: () {});
 
     for (Task task in tasksToDelete) {
@@ -70,9 +64,6 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
       }
     }
     rebuild();
-
-    print(
-        '\n\n-------------------------------Undeleted------------------@@@@@@-------------------\n\n');
   }
 
   void updateTaskGroup({
@@ -82,7 +73,6 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
   }
 
   void editing(bool editing, int index) {
-    print('222222222222222222222222222222\n\n$editing\n$index\n\n');
     setState(() {
       widget.data.taskGroupsList[index].isEditing = editing;
     });

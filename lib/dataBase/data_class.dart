@@ -6,9 +6,7 @@ class Data {
   List<TaskGroup> taskGroupsList = [];
   List<Task> listOfTasks = [];
 
-  Data.init() {
-    print('Data init!');
-  }
+  Data.init() {}
   static final Data _crud = Data.init();
   factory Data() => _crud;
 
@@ -19,9 +17,7 @@ class Data {
   Future<List<TaskGroup>> loadTaskGroups() async {
     try {
       final loadedTaskGroups = await dbHelper.getTaskGroup();
-      print('taskGroup dataLoaded');
       taskGroupsList = loadedTaskGroups;
-      print(taskGroupsList);
 
       return loadedTaskGroups;
     } catch (e) {
@@ -76,17 +72,10 @@ class Data {
 
   Future<List<Task>> loadTasks({required int groupId}) async {
     try {
-      print('tasks data is Loading...');
       final loadTasks = await dbHelper.getTasks(groupId: groupId);
 
       listOfTasks = loadTasks;
-      if (listOfTasks.length == 0) {
-        print(
-            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
-        print(
-            '\n-------------------------------the fucking list is fucking empty-------------------------------------\n');
-      }
-      print('-\nTasks loaded!\n-');
+      print('-\n\nData_class:\nloadTasks\n\n');
       return loadTasks;
     } catch (e) {
       print('\n-----Tasks data did not load-----\n$e');
@@ -100,12 +89,10 @@ class Data {
     required Function() rebuild, // callback function to update the UI
   }) async {
     try {
-      print('\n\n---------Adding Your Task');
       task.groupId = groupId;
-      print(task);
       await dbHelper.insertTask(task);
-      print('Task Added:\n');
       rebuild();
+      print('-\n\nData_class:\nTask Added\n\n');
     } catch (e) {
       print('Task Did Not Get Added\n$e');
     }
@@ -117,8 +104,6 @@ class Data {
   }) async {
     try {
       await dbHelper.deleteTask(task);
-      print('\n\nTask Deleted: ');
-      print(task);
       rebuild();
     } catch (e) {
       print('\n-----Task Did Not Get Deleted-----\n$e');
@@ -130,10 +115,10 @@ class Data {
     required Function() rebuild,
   }) async {
     try {
-      print(
-          'updateTask: taskId: ${task.id} TaskGroupId: ${task.groupId} isDone: ${task.isDone}');
       await dbHelper.updateTask(task);
       rebuild();
+      print('-\n\nData_class:\nTask Updated\n\n');
+      print(task);
     } catch (e) {
       print('-----Task Did Not Update-----\n$e');
     }

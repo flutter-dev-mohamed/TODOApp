@@ -62,18 +62,12 @@ class TaskGroupButton extends StatelessWidget {
             ),
             onPressed: () {
               try {
-                print(
-                    '\n\n-------------------------------\n$taskGroup\n-------------------------------------\n\n');
-
                 getResultFromDrawer(
                   groupId: taskGroup.id!,
                   groupIndex: groupIndex,
                 );
                 Navigator.pop(context);
-              } catch (e) {
-                print(
-                    '\n\n\nTaskGroupDrawer: TextButton Check widget.getResultFromDrawer\n\n\n');
-              }
+              } catch (e) {}
             },
             child: Text(
               label,
@@ -108,11 +102,6 @@ class TaskGroupButton extends StatelessWidget {
       title: const Text('Delete'),
       onPressed: () async {
         tasksToDelete = await delete(taskGroup: taskGroup);
-        print(
-            '\n\n-------------------------------deleted group-------------------------------------\n\n');
-        print(tasksToDelete);
-        print(
-            '\n\n-------------------------------deleted group-------------------------------------\n\n');
         try {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -147,9 +136,7 @@ class TaskGroupButton extends StatelessWidget {
               ),
             ),
           );
-        } catch (e, s) {
-          print(s);
-        }
+        } catch (e, s) {}
       },
     );
   }
@@ -166,7 +153,6 @@ class TaskGroupButton extends StatelessWidget {
       title: const Text('Edit'),
       onPressed: () {
         // AddTaskGroupTextfield(data: data, taskGroup: taskGroup, rebuild: rebuild);
-        print('1111111111111111111111111');
         editing(true, index);
       },
     );

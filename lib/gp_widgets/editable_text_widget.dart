@@ -26,7 +26,7 @@ class EditableTextWidget extends StatefulWidget {
   bool taskTitle;
   // final Function(Task) updateTask;
   // final Function(Task) addTask;
-  final Function(bool) edit;
+  final Function(bool, Task) edit;
   final Function() rebuild;
 
   @override
@@ -50,7 +50,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _focusNode!.requestFocus();
         newTask = true;
-        widget.edit(true);
+        widget.edit(true, widget.task);
       });
     }
     text = widget.initText; //-------------------------------
@@ -69,7 +69,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
   void _saveEdit() {
     text = _controller.text; //-------------------------------
     isEditing = false; //-------------------------------
-    widget.edit(isEditing);
+    widget.edit(isEditing, widget.task);
     if (widget.task.newTask) {
       if (_controller.text.isNotEmpty) {
         widget.task.title = _controller.text;
@@ -80,7 +80,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
             rebuild: widget.rebuild);
       } else {
         widget.task.newTask = false;
-        widget.edit(false);
+        widget.edit(false, widget.task);
       }
     } else {
       if (widget.taskTitle) {
@@ -111,7 +111,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
               setState(() {
                 isEditing = false;
               });
-              widget.edit(isEditing);
+              widget.edit(isEditing, widget.task);
               _saveEdit();
             },
 
@@ -133,7 +133,7 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
             onTap: () {
               setState(() {
                 isEditing = true;
-                widget.edit(isEditing);
+                widget.edit(isEditing, widget.task);
               });
             },
             child: Container(

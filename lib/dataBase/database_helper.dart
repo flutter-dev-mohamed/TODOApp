@@ -49,6 +49,10 @@ class DatabaseHelper {
         title TEXT NOT NULL,
         description TEXT,
         isDone INTEGER,
+        time TEXT,
+        date TEXT,
+        hasDate INTEGER,
+        hasTime INTEGER,
         groupId INTEGER,
         FOREIGN KEY (groupId) REFERENCES task_group(id) ON DELETE CASCADE
       )
@@ -80,7 +84,6 @@ class DatabaseHelper {
 
   Future<Settings> getSettings() async {
     try {
-      print('\n\n-------------------getting settings-------------------\n\n');
       final db = await database;
       List<Map<String, dynamic>> settingsMap = await db!.query('settings');
 
@@ -92,8 +95,6 @@ class DatabaseHelper {
       }
 
       final settings = Settings.fromMap(settingsMap[0]);
-      print('\n\n---------------------got settings---------------------\n\n');
-      print(settings);
       return settings;
     } catch (e) {
       print(
@@ -137,7 +138,6 @@ class DatabaseHelper {
 
     if (groupMaps.isEmpty) {
       try {
-        print('--groupTasks is Empty--');
         await insertTaskGroup(TaskGroup(title: 'ToDo'));
         groupMaps = await db!.query(
           'task_group',
@@ -149,11 +149,6 @@ class DatabaseHelper {
     }
     List<TaskGroup> result =
         List.generate(groupMaps.length, (i) => TaskGroup.fromMap(groupMaps[i]));
-    print(
-        '\n\n----------------------------------getTaskGroups--------------------------\n\n');
-    print(result);
-    print(
-        '\n\n----------------------------------getTaskGroups--------------------------\n\n');
     return result;
   }
 

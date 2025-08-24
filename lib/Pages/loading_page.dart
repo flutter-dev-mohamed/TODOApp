@@ -15,7 +15,6 @@ class _LoadingPageState extends State<LoadingPage> {
   bool navigated = false; // track if navigation already happened
 
   Future<void> loadData() async {
-    print('loadData');
     await data.loadTaskGroups();
     // await data.loadTasks(groupId: data.taskGroupsList[0].id!);
     setState(() {
@@ -25,7 +24,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   void initState() {
-    print('init loadingPage');
     super.initState();
 
     loadData();

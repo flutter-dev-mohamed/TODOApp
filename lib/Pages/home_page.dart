@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Pages/date_and_time.dart';
 import 'package:todo_app/Pages/task_list_page.dart';
 import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:todo_app/Pages/taskGroups_drawer.dart';
+import 'package:todo_app/gp_widgets/custom_bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -32,20 +34,25 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void rebuildHomePage() {
+    print('-\n\nHomePage:\nrebuild\n\n');
+    // TODO: add the after first frame call
+    loadTasksData(groupId: widget.groupId);
+  }
+
   @override
   void initState() {
-    print('\n--------------------initState--------------------\n');
     super.initState();
-    print('\nLoading Tasks Data...\n');
     loadTasksData(groupId: widget.groupId);
-    print('\n--------------------initState--------------------\n');
   }
 
   // callback function to show the done button
+  Task? taskToEditDate;
   bool isEditing = false;
-  void edit(bool isEdit) {
+  void edit(bool isEdit, Task task) {
     setState(() {
       isEditing = isEdit;
+      taskToEditDate = task;
     });
     // return isEditing;
   }
@@ -118,30 +125,46 @@ class _HomePageState extends State<HomePage> {
             scrollController: scrollController,
             edit: edit,
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              //  TODO: add the insert func
-              setState(() {
-                edit(true);
-                widget.data.listOfTasks.add(Task(title: '', newTask: true));
-              });
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                scrollController.animateTo(
-                  scrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              });
-            },
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            child: const Icon(
-              Icons.add_circle_outline_rounded,
-              size: 50,
-            ),
-          ),
+          floatingActionButton: floatingActionButton(),
+          bottomSheet: isEditing
+              ? CustomBottomSheet(
+                  data: widget.data,
+                  rebuildHomePage: rebuildHomePage,
+                  task: taskToEditDate!,
+                )
+              : null,
         ),
       ],
+    );
+  }
+
+  Widget floatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        //  TODO: add the insert func
+        setState(() {
+          Task task = Task(
+            title: '',
+            newTask: true,
+          );
+          edit(true, task);
+          print(task);
+          widget.data.listOfTasks.add(task);
+        });
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        });
+      },
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: const Icon(
+        Icons.add_task_rounded,
+        size: 50,
+      ),
     );
   }
 }

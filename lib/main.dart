@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Pages/date_and_time.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:todo_app/onboarding_screen.dart';
+import 'package:todo_app/settings/notification.dart';
 import 'package:todo_app/settings/settings.dart';
 import 'package:todo_app/test.dart';
 import 'Pages/task_list_page.dart';
@@ -15,6 +17,10 @@ import 'package:todo_app/gp_widgets/custom_checkbox.dart';
 import 'package:todo_app/settings/settings_button.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Notifications().initNotifications();
+
   runApp(const TODOApp());
 }
 
@@ -38,6 +44,7 @@ class _TODOAppState extends State<TODOApp> {
 
     return MaterialApp(
       home: const LoadingPage(),
+      // home: const ShowBottomSheet(),
       // theme: themeData(),
       // theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       theme: settings.getAppTheme(context),

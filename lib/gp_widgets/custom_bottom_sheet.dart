@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import 'package:todo_app/Pages/date_and_time.dart';
+import 'package:todo_app/dataBase/data_class.dart';
+import 'package:todo_app/dataBase/task_class_mod.dart';
+
+class CustomBottomSheet extends StatefulWidget {
+  CustomBottomSheet({
+    super.key,
+    required this.task,
+    required this.data,
+    required this.rebuildHomePage,
+  });
+  Task task;
+  Data data;
+  final Function() rebuildHomePage;
+
+  @override
+  State<CustomBottomSheet> createState() => _CustomBottomSheetState();
+}
+
+class _CustomBottomSheetState extends State<CustomBottomSheet> {
+  void updateTask() {
+    print('-\n\nCustomButtonSheet\nupdateTask is called!\n\n');
+
+    widget.data.updateTask(task: widget.task, rebuild: widget.rebuildHomePage);
+    // print(widget.task);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        borderRadius: const BorderRadius.all(Radius.zero),
+      ),
+      child: Row(
+        children: [dateButton()],
+      ),
+    );
+  }
+
+  Widget dateButton() {
+    return IconButton(
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (context) {
+              return SafeArea(
+                top: true,
+                child: DraggableScrollableSheet(
+                  expand: false,
+                  initialChildSize: 0.9,
+                  builder: (context, scrollController) {
+                    return DateAndTime(
+                      taskToEditDate: widget.task,
+                      updateTask: updateTask,
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
+        icon: const Icon(Icons.event));
+  }
+}

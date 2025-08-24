@@ -17,7 +17,7 @@ class TaskListPage extends StatefulWidget {
   final Data data;
   final int groupId;
   // final String pageTitle;
-  final Function(bool) edit;
+  final Function(bool, Task) edit;
   final ScrollController scrollController;
 
   @override

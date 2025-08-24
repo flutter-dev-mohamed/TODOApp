@@ -2,6 +2,7 @@
 import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/gp_widgets/editable_text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/gp_widgets/timestamp.dart';
 import '../dataBase/task_class_mod.dart';
 import 'package:todo_app/gp_widgets/task_check_box.dart';
 import 'package:todo_app/gp_widgets/delete_task_button.dart';
@@ -31,7 +32,7 @@ class Taskcard extends StatelessWidget {
 
   final Function() rebuild;
   final Function(Task) onChange;
-  final Function(bool) edit;
+  final Function(bool, Task) edit;
   Data data;
   int groupId;
   Task task;
@@ -99,6 +100,7 @@ class Taskcard extends StatelessWidget {
                           task: task,
                           edit: edit,
                         ),
+                        if (task.hasDate || task.hasTime) Timestamp(task: task),
                         const Divider(
                           height: 1,
                         ),
