@@ -1,99 +1,123 @@
+// import 'package:flutter/material.dart';
+// import 'package:todo_app/theme/theme.dart';
+// import 'package:todo_app/theme/util.dart';
+// import 'package:todo_app/dataBase/database_helper.dart';
+// import 'package:todo_app/settings/notification.dart';
 //
-// class DateOption extends StatefulWidget {
-//   DateOption({
-//     super.key,
-//     required this.task,
-//     this.rebuild,
+// class Settings {
+//   // Private constructor
+//   Settings._({
+//     this.autoDeleteDoneTask = true,
+//     this.dynamicBrightness = true,
+//     this.darkMode = false,
+//     this.sendNotifications = false,
 //   });
-//   Task task;
-//   final void Function()? rebuild;
 //
-//   @override
-//   State<DateOption> createState() => _DateOptionState();
-// }
+//   // Singleton instance
+//   static final Settings _instance = Settings._();
 //
-// class _DateOptionState extends State<DateOption>
-//     with SingleTickerProviderStateMixin {
-//   late AnimationController animationController;
+//   // Factory constructor to return the singleton instance
+//   factory Settings() => _instance;
 //
-//   bool expand = false;
+//   // Settings properties
+//   bool autoDeleteDoneTask;
+//   bool dynamicBrightness;
+//   bool darkMode;
+//   bool sendNotifications;
 //
-//   @override
-//   void initState() {
-//     super.initState();
-//     animationController = AnimationController(
-//       vsync: this,
-//       duration: const Duration(milliseconds: 300),
-//     );
-//     if (widget.task.hasDate) {
-//       animationController.value = 1.0;
+//   // Theme change callback
+//   VoidCallback? _onThemeChange;
+//
+//   // Database helper instance
+//   final DatabaseHelper _dbHelper = DatabaseHelper();
+//
+//   /// Initialize settings from database
+//   Future<void> loadSettings() async {
+//     try {
+//       final Settings savedSettings = await _dbHelper.getSettings();
+//       autoDeleteDoneTask = savedSettings.autoDeleteDoneTask;
+//       sendNotifications = savedSettings.sendNotifications;
+//       dynamicBrightness = savedSettings.dynamicBrightness;
+//       darkMode = savedSettings.darkMode;
+//     } catch (e) {
+//       // Handle error (e.g., use default values)
+//       print('Error loading settings: $e');
 //     }
 //   }
 //
-//   void onTapToggleButton() {
-//     // TODO: add the setState and change task values
-//     widget.task.hasDate = !widget.task.hasDate;
-//     if (widget.task.hasDate) {
-//       animationController.forward();
-//       if (widget.task.date == null) {
-//         widget.task.date =
-//         '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}';
-//         print('-\n\nDateOption\nonTapToggleButton\n${widget.task.date}\n\n');
+//   /// Save current settings to database
+//   Future<void> saveSettings() async {
+//     try {
+//       print('\n\n\n----Settings Saved----');
+//       print(toString());
+//       await _dbHelper.updateSettings(this);
+//
+//       // Notify listeners about theme changes
+//       if (_onThemeChange != null) {
+//         _onThemeChange!();
 //       }
-//       print(
-//           '-\n\nDateOption\nonTapToggleButton\ntask.hasDate: ${widget.task.hasDate}\n\n');
+//     } catch (e) {
+//       print('Error saving settings: $e');
+//       rethrow;
+//     }
+//   }
+//
+//   /// Get appropriate theme based on settings
+//   ThemeData getAppTheme(BuildContext context) {
+//     final TextTheme textTheme = createTextTheme(context, "Roboto", "Lexend");
+//     final MaterialTheme theme = MaterialTheme(textTheme);
+//
+//     if (dynamicBrightness) {
+//       final brightness = View.of(context).platformDispatcher.platformBrightness;
+//       return brightness == Brightness.light ? theme.light() : theme.dark();
 //     } else {
-//       print(
-//           '-\n\nDateOption\nonTapToggleButton\ntask.hasDate: ${widget.task.hasDate}\n\n');
-//       widget.task.date = null;
-//       expand = false;
-//       animationController.reverse();
+//       return darkMode ? theme.dark() : theme.light();
 //     }
-//     setState(() {});
-//     widget.rebuild!();
 //   }
 //
-//   @override
-//   Widget build(BuildContext context) {
-//     return DateOrTimePicker(
-//       title: Text('Date'),
-//       subtitle: widget.task.date != null
-//           ? Timestamp(
-//         task: widget.task,
-//         dateOnly: true,
-//       )
-//           : null,
-//       animationController: animationController,
-//       initialDate: widget.task.date != null
-//           ? DateTime.parse(widget.task.date!)
-//           : DateTime.now(),
-//       firstDate: DateTime(1900),
-//       lastDate: DateTime(2100),
-//       onDateTimeChanged: (date) {
-//         //   TODO:
-//         widget.task.date =
-//         '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-//         print(
-//             '-\n\nDateOption\nonDateTimeChanged\ntask.date: ${widget.task.date}\n\n');
-//         // setState(() {});
-//         if (widget.rebuild != null) widget.rebuild!();
-//       },
-//       onTapToggleButton: onTapToggleButton,
-//       onTap: widget.task.hasDate
-//           ? () {
-//         expand = !expand;
-//         print('-\n\nDateOption\nonTap\n$expand\n\n');
-//         setState(() {});
-//       }
-//           : null,
-//       expand: expand,
-//       decoration: BoxDecoration(
-//         color: Theme.of(context).colorScheme.secondaryContainer,
-//         borderRadius: const BorderRadius.only(
-//           topLeft: Radius.circular(16),
-//           topRight: Radius.circular(16),
-//         ),
-//       ),
+//   /// Register a callback for theme changes
+//   void setOnThemeChangeListener(VoidCallback callback) {
+//     _onThemeChange = callback;
+//   }
+//
+//   /// Remove theme change listener
+//   void removeOnThemeChangeListener() {
+//     _onThemeChange = null;
+//   }
+//
+//   /// Send notification if enabled
+//   void sendNotification({
+//     required int id,
+//     required String? title,
+//     String? body,
+//   }) {
+//     if (!sendNotifications) return;
+//     print('Sending Notification...');
+//
+//     Notifications().sendNotification(
+//       id: id,
+//       title: title,
+//       body: body,
+//     );
+//   }
+//
+//   /// Convert settings to map for database storage
+//   Map<String, dynamic> toMap() {
+//     return {
+//       'autoDeleteDoneTask': autoDeleteDoneTask ? 1 : 0,
+//       'dynamicBrightness': dynamicBrightness ? 1 : 0,
+//       'darkMode': darkMode ? 1 : 0,
+//       'sendNotifications': sendNotifications ? 1 : 0,
+//     };
+//   }
+//
+//   /// Create settings from map
+//   factory Settings.fromMap(Map<String, dynamic> map) {
+//     return Settings._(
+//       autoDeleteDoneTask: map['autoDeleteDoneTask'] == 1,
+//       dynamicBrightness: map['dynamicBrightness'] == 1,
+//       darkMode: map['darkMode'] == 1,
+//       sendNotifications: map['sendNotifications'] == 1,
 //     );
 //   }
 // }

@@ -41,16 +41,14 @@ class Settings {
   }
 
   ThemeData getAppTheme(BuildContext context) {
-    TextTheme textTheme = createTextTheme(context, "Roboto", "Lexend");
-    MaterialTheme theme = MaterialTheme(textTheme);
+    final TextTheme textTheme = createTextTheme(context, "Roboto", "Lexend");
+    final MaterialTheme theme = MaterialTheme(textTheme);
 
     if (dynamicBrightness) {
-      _brightness = View.of(context).platformDispatcher.platformBrightness;
-      return _brightness == Brightness.light ? theme.light() : theme.dark();
-    } else if (darkMode) {
-      return theme.dark();
+      final brightness = View.of(context).platformDispatcher.platformBrightness;
+      return brightness == Brightness.light ? theme.light() : theme.dark();
     } else {
-      return theme.light();
+      return darkMode ? theme.dark() : theme.light();
     }
   }
 
@@ -94,7 +92,13 @@ class Settings {
   //
   @override
   String toString() {
-    return '\n\nautoDeleteDoneTask: $autoDeleteDoneTask\nsendNotifications: $sendNotifications\ndynamicBrightness: $dynamicBrightness\ndarkMode: $darkMode\n\n';
+    return '''
+Settings:
+  autoDeleteDoneTask: $autoDeleteDoneTask
+  sendNotifications: $sendNotifications
+  dynamicBrightness: $dynamicBrightness
+  darkMode: $darkMode
+''';
   }
 }
 

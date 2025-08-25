@@ -46,6 +46,8 @@ dependencies:
   google_fonts: ^6.3.0
   smooth_page_indicator: ^1.2.1
   flutter_local_notifications: ^19.4.0
+  timezone: ^0.10.1
+  flutter_timezone: ^4.1.1
 
 
 dev_dependencies:

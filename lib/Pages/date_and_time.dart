@@ -79,7 +79,7 @@ class _DateAndTimeState extends State<DateAndTime> {
   }
 
   Widget applyButton() {
-    // TODO: Apply Changes
+    // TODO: Schedule an notification
     return TextButton(
       onPressed: () {
         widget.updateTask();

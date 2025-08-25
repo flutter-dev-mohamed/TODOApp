@@ -5,6 +5,8 @@ import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:todo_app/Pages/taskGroups_drawer.dart';
 import 'package:todo_app/gp_widgets/custom_bottom_sheet.dart';
+import 'package:todo_app/settings/notification.dart';
+import 'package:todo_app/settings/settings.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -66,6 +68,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // TODO: add an alert dialog to tell the user:
+  //  you can cancel notification for individual task groups from the devices settings
   @override
   Widget build(BuildContext context) {
     if (!dataLoaded) {
@@ -134,6 +138,30 @@ class _HomePageState extends State<HomePage> {
                 )
               : null,
         ),
+        Center(
+          child: TextButton(
+              onPressed: () {
+                final date =
+                    '${DateTime.now().year.toString()}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}';
+                final time =
+                    '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+
+                Notifications().scheduleNotification(
+                    id: 12,
+                    title: '45',
+                    body: 'you should get this notification at 10:50',
+                    dateStr: date,
+                    timeStr: '10:50');
+                // Future.delayed(
+                //   const Duration(seconds: 5),
+                // ).then(
+                //   (value) {
+                //     settings.sendNotification(id: 1, title: 'title');
+                //   },
+                // );
+              },
+              child: const Text('data')),
+        )
       ],
     );
   }
@@ -161,9 +189,10 @@ class _HomePageState extends State<HomePage> {
       },
       elevation: 0,
       backgroundColor: Colors.transparent,
-      child: const Icon(
+      child: Icon(
         Icons.add_task_rounded,
         size: 50,
+        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }
