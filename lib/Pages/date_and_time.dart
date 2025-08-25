@@ -3,6 +3,7 @@ import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:todo_app/gp_widgets/date_option.dart';
 import 'package:todo_app/gp_widgets/date_or_time_picker.dart';
 import 'package:todo_app/gp_widgets/time_option.dart';
+import 'package:todo_app/settings/settings.dart';
 
 class DateAndTime extends StatefulWidget {
   DateAndTime({
@@ -82,8 +83,13 @@ class _DateAndTimeState extends State<DateAndTime> {
     // TODO: Schedule an notification
     return TextButton(
       onPressed: () {
-        widget.updateTask();
-        Navigator.pop(context);
+        try {
+          widget.updateTask();
+          Settings().scheduleNotification(task: widget.taskToEditDate);
+          Navigator.pop(context);
+        } catch (e) {
+          print('=\n\nDateAndTime:\napplyButton:\n$e\n\n');
+        }
       },
       child: const Text('Apply'),
     );

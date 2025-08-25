@@ -25,24 +25,11 @@ class _CustomCheckboxState extends State<CustomCheckbox>
   late AnimationController _animationController;
 
   Timer? _deleteTimer;
-  int _deleteTime = 5;
 
   void delete() {
-    if (!settings.autoDeleteDoneTask) return;
+    if (!Settings().autoDeleteDoneTask) return;
 
     cancel();
-
-    // _deleteTimer = Timer.periodic(
-    //   const Duration(seconds: 1),
-    //   (timer) {
-    //     print('timer = $_deleteTime');
-    //     _deleteTime--;
-    //     if (_deleteTime <= 0) {
-    //       cancel();
-    //       widget.deleteTask();
-    //     }
-    //   },
-    // );
 
     _deleteTimer = Timer(
       const Duration(seconds: 3),
@@ -56,7 +43,6 @@ class _CustomCheckboxState extends State<CustomCheckbox>
   void cancel() {
     _deleteTimer?.cancel();
     _deleteTimer = null;
-    _deleteTime = 5;
   }
 
   @override
@@ -86,11 +72,6 @@ class _CustomCheckboxState extends State<CustomCheckbox>
         widget.task.isDone = !widget.task.isDone;
 
         if (widget.task.isDone) {
-          settings.sendNotification(
-            id: widget.task.id!,
-            title: 'Task Completed!',
-            body: '${widget.task.title} is completed!',
-          );
           await _animationController.forward();
         } else {
           await _animationController.reverse();

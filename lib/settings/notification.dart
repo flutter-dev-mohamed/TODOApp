@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:todo_app/settings/settings.dart';
 
 class Notifications {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
@@ -81,7 +82,7 @@ class Notifications {
       '$groupId',
       taskGroupName, // what the user sees in system setting
       groupKey: '$groupId', // used to group notifications
-      channelDescription: 'Notifications from $taskGroupName',
+      channelDescription: 'Notifications from: $taskGroupName',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
@@ -134,13 +135,34 @@ class Notifications {
     required String dateStr,
     required String timeStr,
     String? body,
+    Repeat? repeat,
   }) async {
     final scheduledDate = parseToTZDateTime(dateStr, timeStr);
     const AndroidScheduleMode androidScheduleMode =
         AndroidScheduleMode.inexactAllowWhileIdle;
+    DateTimeComponents? dateTimeComponents;
+
+    switch (repeat) {
+      case Repeat.daily:
+        dateTimeComponents = DateTimeComponents.time;
+      case Repeat.weakly:
+        dateTimeComponents = DateTimeComponents.dayOfWeekAndTime;
+      case Repeat.monthly:
+        dateTimeComponents = DateTimeComponents.dayOfMonthAndTime;
+      case Repeat.annually:
+        dateTimeComponents = DateTimeComponents.dateAndTime;
+      default:
+        dateTimeComponents = null;
+    }
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
-        id, title, body, scheduledDate, await notificationDetails(),
-        androidScheduleMode: androidScheduleMode);
+      id,
+      title,
+      body,
+      scheduledDate,
+      await notificationDetails(),
+      androidScheduleMode: androidScheduleMode,
+      matchDateTimeComponents: dateTimeComponents,
+    );
   }
 }

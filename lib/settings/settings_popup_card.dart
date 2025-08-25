@@ -68,7 +68,7 @@ class _SettingsPopupCardState extends State<SettingsPopupCard> {
                       const Divider(height: 10),
                       LottieToggleButton(
                         label: 'Auto-Delete',
-                        value: settings.autoDeleteDoneTask,
+                        value: Settings().autoDeleteDoneTask,
                         labelStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: titleColor,
@@ -81,14 +81,14 @@ class _SettingsPopupCardState extends State<SettingsPopupCard> {
                         ),
                         lottieAsset: 'assets/Discord Toggle (Sized).json',
                         onTap: () {
-                          settings.autoDeleteDoneTask =
-                              !settings.autoDeleteDoneTask;
-                          settings.updateSettings();
+                          Settings().autoDeleteDoneTask =
+                              !Settings().autoDeleteDoneTask;
+                          Settings().saveSettings();
                         },
                       ),
                       LottieToggleButton(
                         label: 'Task Notifications',
-                        value: settings.sendNotifications,
+                        value: Settings().sendNotifications,
                         labelStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: titleColor,
@@ -100,14 +100,14 @@ class _SettingsPopupCardState extends State<SettingsPopupCard> {
                         ),
                         lottieAsset: 'assets/Discord Toggle (Sized).json',
                         onTap: () {
-                          settings.sendNotifications =
-                              !settings.sendNotifications;
-                          settings.updateSettings();
+                          Settings().sendNotifications =
+                              !Settings().sendNotifications;
+                          Settings().saveSettings();
                         },
                       ),
                       LottieToggleButton(
                         label: 'Dynamic Theme',
-                        value: settings.dynamicBrightness,
+                        value: Settings().dynamicBrightness,
                         labelStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: titleColor,
@@ -120,20 +120,20 @@ class _SettingsPopupCardState extends State<SettingsPopupCard> {
                         ),
                         lottieAsset: 'assets/Discord Toggle (Sized).json',
                         onTap: () {
-                          settings.dynamicBrightness =
-                              !settings.dynamicBrightness;
-                          if (settings.dynamicBrightness) {
-                            settings.darkMode = false;
+                          Settings().dynamicBrightness =
+                              !Settings().dynamicBrightness;
+                          if (Settings().dynamicBrightness) {
+                            Settings().darkMode = false;
                           }
                           rebuild();
-                          settings.updateSettings();
-                          settings.changeTheme();
+                          Settings().saveSettings();
+                          Settings().changeTheme();
                         },
                       ),
                       LottieToggleButton(
                         label: 'Dark Mode',
-                        value: settings.darkMode,
-                        active: !settings.dynamicBrightness,
+                        value: Settings().darkMode,
+                        active: !Settings().dynamicBrightness,
                         labelStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: titleColor,
@@ -146,9 +146,9 @@ class _SettingsPopupCardState extends State<SettingsPopupCard> {
                         ),
                         lottieAsset: 'assets/Discord Toggle (Sized).json',
                         onTap: () {
-                          settings.darkMode = !settings.darkMode;
-                          settings.updateSettings();
-                          settings.changeTheme();
+                          Settings().darkMode = !Settings().darkMode;
+                          Settings().saveSettings();
+                          Settings().changeTheme();
                         },
                       ),
                     ],

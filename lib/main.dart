@@ -34,6 +34,7 @@ class TODOApp extends StatefulWidget {
 class _TODOAppState extends State<TODOApp> {
   @override
   Widget build(BuildContext context) {
+    final Settings settings = Settings();
     settings.loadSettings();
 
     settings.setChangeTheme(rebuild: () {
@@ -42,12 +43,21 @@ class _TODOAppState extends State<TODOApp> {
 
     Data data = Data();
 
+    settings.setAppTheme(context);
     return MaterialApp(
       home: const LoadingPage(),
       // home: const ShowBottomSheet(),
       // theme: themeData(),
       // theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      theme: settings.getAppTheme(context),
+      // theme: settings.getAppTheme(context),
+      // darkTheme: settings.dark,
+      theme: settings.lightTheme,
+      darkTheme: settings.darkMode
+          ? settings.darkTheme
+          : settings.dynamicBrightness
+              ? settings.darkTheme
+              : null,
+      themeMode: settings.dynamicBrightness ? ThemeMode.system : null,
       debugShowCheckedModeBanner: false,
     );
   }

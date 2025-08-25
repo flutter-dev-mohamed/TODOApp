@@ -138,30 +138,6 @@ class _HomePageState extends State<HomePage> {
                 )
               : null,
         ),
-        Center(
-          child: TextButton(
-              onPressed: () {
-                final date =
-                    '${DateTime.now().year.toString()}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}';
-                final time =
-                    '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
-
-                Notifications().scheduleNotification(
-                    id: 12,
-                    title: '45',
-                    body: 'you should get this notification at 10:50',
-                    dateStr: date,
-                    timeStr: '10:50');
-                // Future.delayed(
-                //   const Duration(seconds: 5),
-                // ).then(
-                //   (value) {
-                //     settings.sendNotification(id: 1, title: 'title');
-                //   },
-                // );
-              },
-              child: const Text('data')),
-        )
       ],
     );
   }

@@ -98,7 +98,7 @@ class DatabaseHelper {
       return settings;
     } catch (e) {
       print(
-          '\n\nError in getSettings (databaseHelper.dart): $settings\n$e\n\n');
+          '\n\nError in getSettings (databaseHelper.dart): $Settings()\n$e\n\n');
       return Settings();
     }
   }

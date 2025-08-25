@@ -85,7 +85,6 @@
 //     _onThemeChange = null;
 //   }
 //
-//   /// Send notification if enabled
 //   void sendNotification({
 //     required int id,
 //     required String? title,
