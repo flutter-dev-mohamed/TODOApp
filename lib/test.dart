@@ -1,122 +1,161 @@
+// import 'package:todo_app/dataBase/task_class_mod.dart';
+// import 'package:todo_app/dataBase/data_class.dart';
 // import 'package:flutter/material.dart';
-// import 'package:todo_app/theme/theme.dart';
-// import 'package:todo_app/theme/util.dart';
-// import 'package:todo_app/dataBase/database_helper.dart';
-// import 'package:todo_app/settings/notification.dart';
+// import 'package:flutter/rendering.dart';
 //
-// class Settings {
-//   // Private constructor
-//   Settings._({
-//     this.autoDeleteDoneTask = true,
-//     this.dynamicBrightness = true,
-//     this.darkMode = false,
-//     this.sendNotifications = false,
+// class EditableTextWidget extends StatefulWidget {
+//   EditableTextWidget({
+//     super.key,
+//     required this.data,
+//     required this.groupId,
+//     this.textStyle = const TextStyle(),
+//     required this.initText,
+//     required this.task,
+//     required this.taskTitle,
+//     // required this.updateTask,
+//     // required this.addTask,
+//     required this.edit,
+//     required this.rebuild,
 //   });
 //
-//   // Singleton instance
-//   static final Settings _instance = Settings._();
+//   Data data;
+//   int groupId;
+//   final String initText; //-------------------------------
+//   final TextStyle textStyle;
+//   Task task;
+//   bool taskTitle;
+//   // final Function(Task) updateTask;
+//   // final Function(Task) addTask;
+//   final Function(bool, Task) edit;
+//   final Function() rebuild;
 //
-//   // Factory constructor to return the singleton instance
-//   factory Settings() => _instance;
+//   @override
+//   State<EditableTextWidget> createState() => _EditableTextWidgetState();
+// }
 //
-//   // Settings properties
-//   bool autoDeleteDoneTask;
-//   bool dynamicBrightness;
-//   bool darkMode;
-//   bool sendNotifications;
+// class _EditableTextWidgetState extends State<EditableTextWidget> {
+//   late String text; //-------------------------------
+//   bool isEditing = false; //-------------------------------
+//   bool newTask =
+//       false; // anewTask flag just for the FUCKING focusNode.dispose func!!!
+//   late TextEditingController _controller;
+//   FocusNode? _focusNode;
+//   @override
+//   void initState() {
+//     super.initState();
+//     _controller = TextEditingController();
 //
-//   // Theme change callback
-//   VoidCallback? _onThemeChange;
+//     if (widget.task.newTask) {
+//       _focusNode = FocusNode();
+//       WidgetsBinding.instance.addPostFrameCallback((_) {
+//         _focusNode!.requestFocus();
+//         newTask = true;
+//         widget.edit(true, widget.task);
+//       });
+//     }
+//     text = widget.initText; //-------------------------------
+//     _controller.text = text; //-------------------------------
+//   }
 //
-//   // Database helper instance
-//   final DatabaseHelper _dbHelper = DatabaseHelper();
-//
-//   /// Initialize settings from database
-//   Future<void> loadSettings() async {
-//     try {
-//       final Settings savedSettings = await _dbHelper.getSettings();
-//       autoDeleteDoneTask = savedSettings.autoDeleteDoneTask;
-//       sendNotifications = savedSettings.sendNotifications;
-//       dynamicBrightness = savedSettings.dynamicBrightness;
-//       darkMode = savedSettings.darkMode;
-//     } catch (e) {
-//       // Handle error (e.g., use default values)
-//       print('Error loading settings: $e');
+//   @override
+//   void dispose() {
+//     super.dispose();
+//     _controller.dispose();
+//     if (newTask) {
+//       _focusNode!.dispose();
 //     }
 //   }
 //
-//   /// Save current settings to database
-//   Future<void> saveSettings() async {
-//     try {
-//       print('\n\n\n----Settings Saved----');
-//       print(toString());
-//       await _dbHelper.updateSettings(this);
+//   void _saveEdit() {
+//     text = _controller.text; //-------------------------------
+//     isEditing = false; //-------------------------------
+//     widget.edit(isEditing, widget.task);
 //
-//       // Notify listeners about theme changes
-//       if (_onThemeChange != null) {
-//         _onThemeChange!();
+//     // new task
+//     if (widget.task.newTask) {
+//       if (_controller.text.isNotEmpty) {
+//         widget.task.title = _controller.text;
+//         widget.task.newTask = false;
+//         widget.data.addTask(
+//             task: widget.task,
+//             groupId: widget.groupId,
+//             rebuild: widget.rebuild);
+//       } else {
+//         widget.task.newTask = false;
+//         widget.edit(false, widget.task);
 //       }
-//     } catch (e) {
-//       print('Error saving settings: $e');
-//       rethrow;
-//     }
-//   }
-//
-//   /// Get appropriate theme based on settings
-//   ThemeData getAppTheme(BuildContext context) {
-//     final TextTheme textTheme = createTextTheme(context, "Roboto", "Lexend");
-//     final MaterialTheme theme = MaterialTheme(textTheme);
-//
-//     if (dynamicBrightness) {
-//       final brightness = View.of(context).platformDispatcher.platformBrightness;
-//       return brightness == Brightness.light ? theme.light() : theme.dark();
 //     } else {
-//       return darkMode ? theme.dark() : theme.light();
+//       // old task
+//
+//       if (widget.taskTitle) {
+//         widget.task.title = text;
+//       } else {
+//         widget.task.description = text;
+//       }
+//       widget.data.updateTask(task: widget.task, rebuild: widget.rebuild);
 //     }
+//     widget.rebuild();
 //   }
 //
-//   /// Register a callback for theme changes
-//   void setOnThemeChangeListener(VoidCallback callback) {
-//     _onThemeChange = callback;
-//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     Color? defaultTextColor = Theme.of(context).textTheme.bodyMedium?.color;
+//     Color hinTextColor = (defaultTextColor ?? Colors.black).withOpacity(0.2);
+//     return (isEditing || widget.task.newTask)
+//         ? TextField(
+//             style: widget.textStyle,
+//             controller: _controller,
+//             focusNode: widget.task.newTask ? _focusNode : null,
+//             maxLines: null,
+//             minLines: 1,
+//             keyboardType: TextInputType.multiline,
+//             autofocus: true,
+//             onEditingComplete: _saveEdit,
+//             onTapOutside: (event) {
+//               setState(() {
+//                 isEditing = false;
+//               });
+//               widget.edit(isEditing, widget.task);
+//               _saveEdit();
+//             },
 //
-//   /// Remove theme change listener
-//   void removeOnThemeChangeListener() {
-//     _onThemeChange = null;
-//   }
-//
-//   void sendNotification({
-//     required int id,
-//     required String? title,
-//     String? body,
-//   }) {
-//     if (!sendNotifications) return;
-//     print('Sending Notification...');
-//
-//     Notifications().sendNotification(
-//       id: id,
-//       title: title,
-//       body: body,
-//     );
-//   }
-//
-//   /// Convert settings to map for database storage
-//   Map<String, dynamic> toMap() {
-//     return {
-//       'autoDeleteDoneTask': autoDeleteDoneTask ? 1 : 0,
-//       'dynamicBrightness': dynamicBrightness ? 1 : 0,
-//       'darkMode': darkMode ? 1 : 0,
-//       'sendNotifications': sendNotifications ? 1 : 0,
-//     };
-//   }
-//
-//   /// Create settings from map
-//   factory Settings.fromMap(Map<String, dynamic> map) {
-//     return Settings._(
-//       autoDeleteDoneTask: map['autoDeleteDoneTask'] == 1,
-//       dynamicBrightness: map['dynamicBrightness'] == 1,
-//       darkMode: map['darkMode'] == 1,
-//       sendNotifications: map['sendNotifications'] == 1,
-//     );
+//             //
+//             decoration: widget.taskTitle
+//                 ? const InputDecoration(
+//                     border: InputBorder.none,
+//                   )
+//                 : InputDecoration(
+//                     border: InputBorder.none,
+//                     hintText: "Add note",
+//                     hintStyle: TextStyle(
+//                       fontWeight: FontWeight.bold,
+//                       color: hinTextColor,
+//                     ),
+//                   ),
+//           )
+// //-----------------------------------------------------------------
+//         : GestureDetector(
+//             onTap: () {
+//               setState(() {
+//                 isEditing = true;
+//                 widget.edit(isEditing, widget.task);
+//               });
+//             },
+//             child: Container(
+//               width: RenderErrorBox.minimumWidth,
+//               child: !widget.taskTitle && text.isEmpty
+//                   ? Text(
+//                       'Add note',
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                         color: hinTextColor,
+//                       ),
+//                     )
+//                   : Text(
+//                       text,
+//                       style: widget.textStyle,
+//                     ),
+//             ),
+//           );
 //   }
 // }

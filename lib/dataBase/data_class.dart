@@ -75,7 +75,6 @@ class Data {
       final loadTasks = await dbHelper.getTasks(groupId: groupId);
 
       listOfTasks = loadTasks;
-      print('-\n\nData_class:\nloadTasks\n\n');
       return loadTasks;
     } catch (e) {
       print('\n-----Tasks data did not load-----\n$e');
@@ -88,6 +87,14 @@ class Data {
     required int groupId,
     required Function() rebuild, // callback function to update the UI
   }) async {
+    // empty task -> return
+    if (task.title.isEmpty && task.description.isEmpty) return;
+
+    // missing title
+    if (task.title.isEmpty && task.description.isNotEmpty) {
+      task.title = 'New Reminder';
+    }
+
     try {
       task.groupId = groupId;
       await dbHelper.insertTask(task);

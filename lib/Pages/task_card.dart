@@ -19,7 +19,7 @@ const TextStyle subTitleStyle = TextStyle(
 
 Color? checkBoxColor;
 
-class Taskcard extends StatelessWidget {
+class Taskcard extends StatefulWidget {
   Taskcard({
     super.key,
     required this.data,
@@ -37,12 +37,31 @@ class Taskcard extends StatelessWidget {
   int groupId;
   Task task;
 
+  @override
+  State<Taskcard> createState() => _TaskcardState();
+}
+
+class _TaskcardState extends State<Taskcard> {
   void deleteTask() async {
-    data.deleteTask(task: task, rebuild: rebuild);
+    widget.data.deleteTask(task: widget.task, rebuild: widget.rebuild);
   }
 
   void undoDeleteTask() {
-    data.addTask(task: task, groupId: groupId, rebuild: rebuild);
+    widget.data.addTask(
+        task: widget.task, groupId: widget.groupId, rebuild: widget.rebuild);
+  }
+
+  bool showHint = false;
+
+  void editCard({
+    required bool isEditing,
+    required Task task,
+    bool hint = false,
+  }) {
+    setState(() {
+      showHint = hint;
+    });
+    widget.edit(isEditing, task);
   }
 
   @override
@@ -54,7 +73,7 @@ class Taskcard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: Container(
-          color: task.isDone
+          color: widget.task.isDone
               ? Theme.of(context).colorScheme.secondaryContainer
               : null,
           child: Slidable(
@@ -63,7 +82,7 @@ class Taskcard extends StatelessWidget {
               motion: DrawerMotion(),
               children: [
                 DeleteTaskButton(
-                  key: key,
+                  key: widget.key,
                   delete: deleteTask,
                   undoDeleteTask: undoDeleteTask,
                 ),
@@ -71,40 +90,43 @@ class Taskcard extends StatelessWidget {
             ),
             child: ListTile(
               leading: CustomCheckbox(
-                task: task,
-                onChange: onChange,
+                task: widget.task,
+                onChange: widget.onChange,
                 deleteTask: deleteTask,
               ),
               title: EditableTextWidget(
-                rebuild: rebuild,
-                data: data,
-                groupId: groupId,
-                initText: task.title,
-                taskTitle: true,
-                task: task,
-                edit: edit,
-                // updateTask: updateTask,
+                rebuild: widget.rebuild,
+                // data: data,
+                groupId: widget.groupId,
+                // initText: task.title,
+                isTitle: true,
+                task: widget.task,
+                edit: editCard,
+                // // updateTask: updateTask,
                 textStyle: titleTextStyle,
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: task.newTask
-                    ? []
-                    : [
-                        EditableTextWidget(
-                          data: data,
-                          groupId: groupId,
-                          rebuild: rebuild,
-                          initText: task.description,
-                          taskTitle: false,
-                          task: task,
-                          edit: edit,
-                        ),
-                        if (task.hasDate || task.hasTime) Timestamp(task: task),
-                        const Divider(
-                          height: 1,
-                        ),
-                      ],
+                children: [
+                  if (widget.task.description.isNotEmpty || showHint)
+                    EditableTextWidget(
+                      // data: data,
+                      groupId: widget.groupId,
+                      rebuild: widget.rebuild,
+                      // initText: task.description,
+                      task: widget.task,
+                      edit: editCard,
+                      showHint: showHint,
+                    ),
+                  if (widget.task.hasDate || widget.task.hasTime)
+                    Timestamp(
+                      task: widget.task,
+                      fontSize: 12,
+                    ),
+                  const Divider(
+                    height: 1,
+                  ),
+                ],
               ),
             ),
           ),

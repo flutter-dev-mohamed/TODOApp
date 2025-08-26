@@ -1,45 +1,37 @@
-import 'package:todo_app/dataBase/task_class_mod.dart';
-import 'package:todo_app/dataBase/data_class.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:todo_app/dataBase/data_class.dart';
+import 'package:todo_app/dataBase/task_class_mod.dart';
 
 class EditableTextWidget extends StatefulWidget {
   EditableTextWidget({
     super.key,
-    required this.data,
-    required this.groupId,
-    this.textStyle = const TextStyle(),
-    required this.initText,
     required this.task,
-    required this.taskTitle,
-    // required this.updateTask,
-    // required this.addTask,
+    required this.groupId,
     required this.edit,
     required this.rebuild,
+    this.showHint = false,
+    this.isTitle = false,
+    this.textStyle = const TextStyle(),
   });
-
-  Data data;
-  int groupId;
-  final String initText; //-------------------------------
-  final TextStyle textStyle;
   Task task;
-  bool taskTitle;
-  // final Function(Task) updateTask;
-  // final Function(Task) addTask;
-  final Function(bool, Task) edit;
+  bool showHint;
+  bool isTitle;
+  final TextStyle textStyle;
+  final int groupId;
   final Function() rebuild;
+  final Function({required bool isEditing, required Task task, bool hint}) edit;
 
   @override
   State<EditableTextWidget> createState() => _EditableTextWidgetState();
 }
 
 class _EditableTextWidgetState extends State<EditableTextWidget> {
-  late String text; //-------------------------------
-  bool isEditing = false; //-------------------------------
-  bool newTask =
-      false; // anewTask flag just for the FUCKING focusNode.dispose func!!!
+  final Data data = Data();
   late TextEditingController _controller;
-  FocusNode? _focusNode;
+  late FocusNode _focusNode;
+  late String initText;
+  bool _isEditing = false;
+
   @override
   void initState() {
     super.initState();
@@ -47,110 +39,130 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
 
     if (widget.task.newTask) {
       _focusNode = FocusNode();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _focusNode!.requestFocus();
-        newTask = true;
-        widget.edit(true, widget.task);
-      });
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) {
+          _focusNode.requestFocus();
+          // we only request focus if the task is new and we want to show the Add Note hint
+          widget.edit(isEditing: true, task: widget.task, hint: true);
+        },
+      );
     }
-    text = widget.initText; //-------------------------------
-    _controller.text = text; //-------------------------------
+    initText = widget.isTitle ? widget.task.title : widget.task.description;
+    _controller.text = initText.trim();
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
-    if (newTask) {
-      _focusNode!.dispose();
-    }
+    if (widget.task.newTask) _focusNode.dispose();
   }
 
-  void _saveEdit() {
-    text = _controller.text; //-------------------------------
-    isEditing = false; //-------------------------------
-    widget.edit(isEditing, widget.task);
-    if (widget.task.newTask) {
-      if (_controller.text.isNotEmpty) {
-        widget.task.title = _controller.text;
-        widget.task.newTask = false;
-        widget.data.addTask(
-            task: widget.task,
-            groupId: widget.groupId,
-            rebuild: widget.rebuild);
-      } else {
-        widget.task.newTask = false;
-        widget.edit(false, widget.task);
-      }
-    } else {
-      if (widget.taskTitle) {
-        widget.task.title = text;
-      } else {
-        widget.task.description = text;
-      }
-      widget.data.updateTask(task: widget.task, rebuild: widget.rebuild);
-    }
-    widget.rebuild();
+  void onTap() {
+    setState(() {
+      _isEditing = true;
+      widget.edit(isEditing: _isEditing, task: widget.task, hint: true);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Color? defaultTextColor = Theme.of(context).textTheme.bodyMedium?.color;
-    Color hinTextColor = (defaultTextColor ?? Colors.black).withOpacity(0.2);
-    return (isEditing || widget.task.newTask)
-        ? TextField(
-            style: widget.textStyle,
-            controller: _controller,
-            focusNode: widget.task.newTask ? _focusNode : null,
-            maxLines: null,
-            minLines: 1,
-            keyboardType: TextInputType.multiline,
-            autofocus: true,
-            onEditingComplete: _saveEdit,
-            onTapOutside: (event) {
-              setState(() {
-                isEditing = false;
-              });
-              widget.edit(isEditing, widget.task);
-              _saveEdit();
-            },
+    Color hinTextColor = (defaultTextColor ?? Colors.black).withAlpha(100);
 
-            //
-            decoration: widget.taskTitle
-                ? const InputDecoration(
-                    border: InputBorder.none,
-                  )
-                : InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Add note",
-                    hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: hinTextColor,
-                    ),
-                  ),
-          )
+    return _isEditing || widget.task.newTask
+        ? textField(hinTextColor)
         : GestureDetector(
-            onTap: () {
-              setState(() {
-                isEditing = true;
-                widget.edit(isEditing, widget.task);
-              });
-            },
-            child: Container(
-              width: RenderErrorBox.minimumWidth,
-              child: !widget.taskTitle && text.isEmpty
-                  ? Text(
-                      'Add note',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: hinTextColor,
-                      ),
-                    )
-                  : Text(
-                      text,
-                      style: widget.textStyle,
-                    ),
-            ),
+            onTap: onTap,
+            child: showText(hinTextColor),
           );
+  }
+
+  void newTask({required String text}) {
+    // handle title
+    widget.isTitle ? widget.task.title = text : widget.task.description = text;
+
+    data.addTask(
+        task: widget.task, groupId: widget.groupId, rebuild: widget.rebuild);
+  }
+
+  void oldTask({required String text}) {
+    // handle task title
+    if (widget.isTitle) {
+      if (text.isNotEmpty) widget.task.title = text;
+      _controller.text = widget.task.title;
+    } else {
+      // handle task description
+      widget.task.description = text;
+    }
+    data.updateTask(task: widget.task, rebuild: widget.rebuild);
+  }
+
+  void _saveEdit() {
+    String text = _controller.text.trim();
+    _isEditing = false;
+
+    // new task
+    if (widget.task.newTask) {
+      widget.task.newTask = false;
+      newTask(text: text);
+    } else {
+      // old task
+      oldTask(text: text);
+    }
+
+    // lastly
+    print(
+        '-\n\n EditableTextWidget:\n _saveEdit:\n widget.task.title: "${widget.task.title}"\n\n');
+
+    widget.edit(isEditing: _isEditing, task: widget.task);
+    widget.rebuild();
+  }
+
+  void onEditingComplete() {
+    _saveEdit();
+  }
+
+  void onSubmitted(String s) {
+    _saveEdit();
+  }
+
+  void onTapOutside(PointerUpEvent event) {
+    _saveEdit();
+  }
+
+  Widget textField(Color hinTextColor) {
+    return TextField(
+      style: widget.textStyle,
+      controller: _controller,
+      focusNode: widget.task.newTask && widget.isTitle ? _focusNode : null,
+      autofocus: !widget.task.newTask,
+      maxLines: null,
+      minLines: 1,
+      textInputAction: TextInputAction.done,
+      keyboardType: TextInputType.multiline,
+      // onSubmitted: onSubmitted,
+      onEditingComplete: onEditingComplete,
+      onTapUpOutside: onTapOutside,
+
+      //
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: widget.isTitle ? "New Reminder" : "Add note",
+        hintStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: hinTextColor,
+        ),
+      ),
+    );
+  }
+
+  Widget showText(Color hinTextColor) {
+    return widget.isTitle
+        ? Text(widget.task.title.isEmpty ? 'New Reminder' : widget.task.title,
+            style: widget.textStyle)
+        : widget.showHint && widget.task.description.isEmpty
+            ? Text('Add Note', style: TextStyle(color: hinTextColor))
+            : Text(widget.task.description);
   }
 }
