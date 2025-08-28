@@ -9,6 +9,9 @@ class EditableTextWidget extends StatefulWidget {
     required this.groupId,
     required this.edit,
     required this.rebuild,
+    required this.focusNode,
+    required this.controller,
+    // required this.isEditing,
     this.showHint = false,
     this.isTitle = false,
     this.textStyle = const TextStyle(),
@@ -16,6 +19,9 @@ class EditableTextWidget extends StatefulWidget {
   Task task;
   bool showHint;
   bool isTitle;
+  // bool isEditing;
+  final TextEditingController controller;
+  final FocusNode focusNode;
   final TextStyle textStyle;
   final int groupId;
   final Function() rebuild;
@@ -27,35 +33,27 @@ class EditableTextWidget extends StatefulWidget {
 
 class _EditableTextWidgetState extends State<EditableTextWidget> {
   final Data data = Data();
-  late TextEditingController _controller;
-  late FocusNode _focusNode;
-  late String initText;
   bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+
+    widget.focusNode.addListener(
+      () {
+        if (!widget.focusNode.hasFocus) _isEditing = false;
+      },
+    );
 
     if (widget.task.newTask) {
-      _focusNode = FocusNode();
       WidgetsBinding.instance.addPostFrameCallback(
         (_) {
-          _focusNode.requestFocus();
+          if (widget.isTitle) widget.focusNode.requestFocus();
           // we only request focus if the task is new and we want to show the Add Note hint
           widget.edit(isEditing: true, task: widget.task, hint: true);
         },
       );
     }
-    initText = widget.isTitle ? widget.task.title : widget.task.description;
-    _controller.text = initText.trim();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-    if (widget.task.newTask) _focusNode.dispose();
   }
 
   void onTap() {
@@ -69,6 +67,8 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
   Widget build(BuildContext context) {
     Color? defaultTextColor = Theme.of(context).textTheme.bodyMedium?.color;
     Color hinTextColor = (defaultTextColor ?? Colors.black).withAlpha(100);
+    // print(
+    //     '-\n\n EditableTextWidget:\n build:\n taskTitle: ${widget.task.title}\n _isEditing: $_isEditing\n widget.task.newTask: ${widget.task.newTask}\n\n');
 
     return _isEditing || widget.task.newTask
         ? textField(hinTextColor)
@@ -78,72 +78,20 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
           );
   }
 
-  void newTask({required String text}) {
-    // handle title
-    widget.isTitle ? widget.task.title = text : widget.task.description = text;
-
-    data.addTask(
-        task: widget.task, groupId: widget.groupId, rebuild: widget.rebuild);
-  }
-
-  void oldTask({required String text}) {
-    // handle task title
-    if (widget.isTitle) {
-      if (text.isNotEmpty) widget.task.title = text;
-      _controller.text = widget.task.title;
-    } else {
-      // handle task description
-      widget.task.description = text;
-    }
-    data.updateTask(task: widget.task, rebuild: widget.rebuild);
-  }
-
-  void _saveEdit() {
-    String text = _controller.text.trim();
-    _isEditing = false;
-
-    // new task
-    if (widget.task.newTask) {
-      widget.task.newTask = false;
-      newTask(text: text);
-    } else {
-      // old task
-      oldTask(text: text);
-    }
-
-    // lastly
-    print(
-        '-\n\n EditableTextWidget:\n _saveEdit:\n widget.task.title: "${widget.task.title}"\n\n');
-
-    widget.edit(isEditing: _isEditing, task: widget.task);
-    widget.rebuild();
-  }
-
-  void onEditingComplete() {
-    _saveEdit();
-  }
-
-  void onSubmitted(String s) {
-    _saveEdit();
-  }
-
-  void onTapOutside(PointerUpEvent event) {
-    _saveEdit();
-  }
-
   Widget textField(Color hinTextColor) {
     return TextField(
       style: widget.textStyle,
-      controller: _controller,
-      focusNode: widget.task.newTask && widget.isTitle ? _focusNode : null,
+      controller: widget.controller,
+      focusNode: widget.focusNode,
       autofocus: !widget.task.newTask,
       maxLines: null,
       minLines: 1,
-      textInputAction: TextInputAction.done,
+      textInputAction:
+          widget.isTitle ? TextInputAction.done : TextInputAction.newline,
       keyboardType: TextInputType.multiline,
-      // onSubmitted: onSubmitted,
-      onEditingComplete: onEditingComplete,
-      onTapUpOutside: onTapOutside,
+      onSubmitted: (value) => widget.focusNode.unfocus(),
+      onEditingComplete: () => widget.focusNode.unfocus(),
+      onTapUpOutside: (event) => widget.focusNode.unfocus(),
 
       //
       decoration: InputDecoration(

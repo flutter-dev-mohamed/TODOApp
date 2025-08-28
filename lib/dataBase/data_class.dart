@@ -97,7 +97,8 @@ class Data {
 
     try {
       task.groupId = groupId;
-      await dbHelper.insertTask(task);
+      int insertId = await dbHelper.insertTask(task);
+      task.id = insertId;
       rebuild();
       print('-\n\nData_class:\nTask Added\n\n');
     } catch (e) {

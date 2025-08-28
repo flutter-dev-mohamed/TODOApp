@@ -52,7 +52,7 @@ class _TaskListPageState extends State<TaskListPage> {
           Task task = widget.data.listOfTasks[index];
           return Taskcard(
             key: ValueKey(task.id),
-            data: widget.data,
+            // data: widget.data,
             task: task,
             groupId: widget.groupId,
             onChange: onChange,

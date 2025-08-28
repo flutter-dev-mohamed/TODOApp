@@ -22,7 +22,7 @@ Color? checkBoxColor;
 class Taskcard extends StatefulWidget {
   Taskcard({
     super.key,
-    required this.data,
+    // required this.data,
     required this.groupId,
     required this.task,
     required this.edit,
@@ -33,7 +33,7 @@ class Taskcard extends StatefulWidget {
   final Function() rebuild;
   final Function(Task) onChange;
   final Function(bool, Task) edit;
-  Data data;
+  // Data data;
   int groupId;
   Task task;
 
@@ -42,19 +42,21 @@ class Taskcard extends StatefulWidget {
 }
 
 class _TaskcardState extends State<Taskcard> {
+  Data data = Data();
+
   void deleteTask() async {
-    widget.data.deleteTask(task: widget.task, rebuild: widget.rebuild);
+    data.deleteTask(task: widget.task, rebuild: widget.rebuild);
   }
 
   void undoDeleteTask() {
-    widget.data.addTask(
+    data.addTask(
         task: widget.task, groupId: widget.groupId, rebuild: widget.rebuild);
   }
 
   bool showHint = false;
 
   void editCard({
-    required bool isEditing,
+    bool isEditing = false,
     required Task task,
     bool hint = false,
   }) {
@@ -63,6 +65,65 @@ class _TaskcardState extends State<Taskcard> {
     });
     widget.edit(isEditing, task);
   }
+
+  // test
+  late FocusNode _titleFocusNode;
+  late FocusNode _descFocusNode;
+  late TextEditingController _titleController;
+  late TextEditingController _descController;
+  @override
+  void initState() {
+    super.initState();
+    _titleFocusNode = FocusNode();
+    _descFocusNode = FocusNode();
+    _titleFocusNode.addListener(handelFocus);
+    _descFocusNode.addListener(handelFocus);
+
+    _titleController = TextEditingController(text: widget.task.title);
+    _descController = TextEditingController(text: widget.task.description);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _titleFocusNode.dispose();
+    _titleController.dispose();
+    _descFocusNode.dispose();
+    _descController.dispose();
+  }
+
+  void handelFocus() {
+    // if neither has focus
+    if (!_titleFocusNode.hasFocus && !_descFocusNode.hasFocus) _commitTask();
+
+    // if any of the two text fields has focus
+    if (_titleFocusNode.hasFocus || _descFocusNode.hasFocus) {
+      editCard(isEditing: true, task: widget.task, hint: true);
+    }
+  }
+
+  void _commitTask() {
+    String title = _titleController.text.trim();
+    String desc = _descController.text.trim();
+
+    if (title.isEmpty && desc.isEmpty) {
+      editCard(task: widget.task);
+      widget.rebuild();
+      return;
+    }
+
+    widget.task.title = title.isNotEmpty ? title : "New Reminder";
+    widget.task.description = desc;
+
+    widget.task.newTask
+        ? data.addTask(
+            task: widget.task, groupId: widget.groupId, rebuild: widget.rebuild)
+        : data.updateTask(task: widget.task, rebuild: widget.rebuild);
+    editCard(task: widget.task);
+    widget.rebuild();
+  }
+
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +156,10 @@ class _TaskcardState extends State<Taskcard> {
                 deleteTask: deleteTask,
               ),
               title: EditableTextWidget(
+                focusNode: _titleFocusNode,
+                controller: _titleController,
                 rebuild: widget.rebuild,
+
                 // data: data,
                 groupId: widget.groupId,
                 // initText: task.title,
@@ -110,6 +174,8 @@ class _TaskcardState extends State<Taskcard> {
                 children: [
                   if (widget.task.description.isNotEmpty || showHint)
                     EditableTextWidget(
+                      focusNode: _descFocusNode,
+                      controller: _descController,
                       // data: data,
                       groupId: widget.groupId,
                       rebuild: widget.rebuild,
