@@ -53,9 +53,17 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                 expand: false,
                 initialChildSize: 0.9,
                 builder: (context, scrollController) {
-                  return DateAndTime(
-                    taskToEditDate: widget.task,
-                    updateTask: updateTask,
+                  return Navigator(
+                    onGenerateRoute: (settings) {
+                      return MaterialPageRoute(
+                        builder: (context) {
+                          return DateAndTime(
+                            taskToEditDate: widget.task,
+                            updateTask: updateTask,
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),

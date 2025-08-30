@@ -1,3 +1,5 @@
+import 'package:todo_app/settings/settings.dart';
+
 class Task {
   String title;
   int? id;
@@ -9,6 +11,7 @@ class Task {
   String? _time;
   bool hasDate;
   bool hasTime;
+  Repeat repeat;
 
   Task({
     this.id,
@@ -21,6 +24,7 @@ class Task {
     this.hasDate = false,
     String? time,
     this.hasTime = false,
+    this.repeat = Repeat.Never,
   })  : _date = date,
         _time = time;
 
@@ -79,6 +83,7 @@ class Task {
       'time': _time,
       'hasTime': hasTime ? 1 : 0,
       'hasDate': hasDate ? 1 : 0,
+      'repeat': repeat.index,
     };
   }
 
@@ -93,6 +98,7 @@ class Task {
       time: map['time'],
       hasDate: map['hasDate'] == 1,
       hasTime: map['hasTime'] == 1,
+      repeat: Repeat.values[map['repeat']],
     );
   }
 

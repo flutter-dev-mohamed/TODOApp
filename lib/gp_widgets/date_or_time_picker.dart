@@ -14,6 +14,7 @@ class DateOrTimePicker extends StatelessWidget {
     required this.firstDate,
     required this.lastDate,
     this.onTap,
+    this.leading,
     this.subtitle,
     this.decoration,
     this.expand = false,
@@ -29,6 +30,7 @@ class DateOrTimePicker extends StatelessWidget {
   final void Function(DateTime) onDateTimeChanged;
   final void Function()? onTap;
   final Widget? title;
+  final Widget? leading;
   final Widget? subtitle;
   final bool expand;
   final bool timePicker;
@@ -41,6 +43,7 @@ class DateOrTimePicker extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
+            leading: leading,
             title: title,
             subtitle: subtitle,
             trailing: trailing(),

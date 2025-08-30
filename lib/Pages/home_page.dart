@@ -39,7 +39,11 @@ class _HomePageState extends State<HomePage> {
   void rebuildHomePage() {
     print('-\n\nHomePage:\nrebuild\n\n');
     // TODO: add the after first frame call
-    loadTasksData(groupId: widget.groupId);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        loadTasksData(groupId: widget.groupId);
+      },
+    );
   }
 
   @override
@@ -129,7 +133,7 @@ class _HomePageState extends State<HomePage> {
             scrollController: scrollController,
             edit: edit,
           ),
-          floatingActionButton: floatingActionButton(),
+          floatingActionButton: isEditing ? null : floatingActionButton(),
           bottomSheet: isEditing
               ? CustomBottomSheet(
                   data: widget.data,

@@ -41,9 +41,12 @@ class _DateOptionState extends State<DateOption>
   @override
   void didUpdateWidget(covariant DateOption oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.task.hasDate
-        ? animationController.forward()
-        : animationController.reverse();
+    if (widget.task.hasDate) {
+      animationController.forward();
+    } else {
+      expanded = false;
+      animationController.reverse();
+    }
   }
 
   void onTapToggleButton() {
@@ -65,13 +68,16 @@ class _DateOptionState extends State<DateOption>
     widget.rebuild();
   }
 
+  late ColorScheme theme;
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context).colorScheme;
     return DateOrTimePicker(
       title: const Text('Date'),
       subtitle: widget.task.hasDate
           ? Timestamp(task: widget.task, dateOnly: true, fontSize: 12)
           : null,
+      leading: leadingIcon(),
       expand: expanded,
 
       animationController: animationController,
@@ -92,10 +98,26 @@ class _DateOptionState extends State<DateOption>
 
       //
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondaryContainer,
+        color: theme.secondaryContainer,
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(16),
           topLeft: Radius.circular(16),
+        ),
+      ),
+    );
+  }
+
+  Widget leadingIcon() {
+    return SizedBox(
+      width: 30,
+      height: 30,
+      child: Material(
+        borderRadius: BorderRadius.circular(5.5),
+        color: theme.surfaceContainer,
+        elevation: 1,
+        child: Icon(
+          Icons.calendar_month_rounded,
+          color: Colors.green[300],
         ),
       ),
     );

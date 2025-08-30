@@ -42,9 +42,12 @@ class _TimeOptionState extends State<TimeOption>
   @override
   void didUpdateWidget(covariant TimeOption oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.task.hasTime
-        ? animationController.forward()
-        : animationController.reverse();
+    if (widget.task.hasTime) {
+      animationController.forward();
+    } else {
+      expanded = false;
+      animationController.reverse();
+    }
   }
 
   String todayDate() {
@@ -71,14 +74,20 @@ class _TimeOptionState extends State<TimeOption>
     widget.rebuild();
   }
 
+  late ColorScheme theme;
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context).colorScheme;
     return DateOrTimePicker(
       timePicker: true,
-      title: const Text('Time'),
+      title: Text(
+        'Time',
+        style: TextStyle(color: theme.onSecondaryContainer),
+      ),
       subtitle: widget.task.hasTime
           ? Timestamp(task: widget.task, timeOnly: true, fontSize: 12)
           : null,
+      leading: leadingIcon(),
       expand: expanded,
 
       animationController: animationController,
@@ -99,10 +108,26 @@ class _TimeOptionState extends State<TimeOption>
 
       //
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondaryContainer,
+        color: theme.secondaryContainer,
         borderRadius: const BorderRadius.only(
           bottomRight: Radius.circular(16),
           bottomLeft: Radius.circular(16),
+        ),
+      ),
+    );
+  }
+
+  Widget leadingIcon() {
+    return SizedBox(
+      width: 30,
+      height: 30,
+      child: Material(
+        borderRadius: BorderRadius.circular(5.5),
+        color: theme.surfaceContainer,
+        elevation: 1,
+        child: Icon(
+          Icons.schedule_rounded,
+          color: Colors.orange[300],
         ),
       ),
     );

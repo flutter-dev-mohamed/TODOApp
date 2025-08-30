@@ -53,6 +53,7 @@ class DatabaseHelper {
         date TEXT,
         hasDate INTEGER,
         hasTime INTEGER,
+        repeat INTEGER,
         groupId INTEGER,
         FOREIGN KEY (groupId) REFERENCES task_group(id) ON DELETE CASCADE
       )

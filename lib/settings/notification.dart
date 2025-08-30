@@ -143,14 +143,18 @@ class Notifications {
     DateTimeComponents? dateTimeComponents;
 
     switch (repeat) {
-      case Repeat.daily:
+      case Repeat.Daily:
         dateTimeComponents = DateTimeComponents.time;
-      case Repeat.weakly:
+        break;
+      case Repeat.Weekly:
         dateTimeComponents = DateTimeComponents.dayOfWeekAndTime;
-      case Repeat.monthly:
+        break;
+      case Repeat.Monthly:
         dateTimeComponents = DateTimeComponents.dayOfMonthAndTime;
-      case Repeat.annually:
+        break;
+      case Repeat.Yearly:
         dateTimeComponents = DateTimeComponents.dateAndTime;
+        break;
       default:
         dateTimeComponents = null;
     }

@@ -70,19 +70,26 @@ class Settings {
   }
 
   void scheduleNotification({required Task task}) {
-    final timeParts = task.time!.split(':');
-    int hour = int.parse(timeParts[0]);
-    final int minute = int.parse(timeParts[1]);
+    String time;
+    try {
+      final timeParts = task.time!.split(':');
+      int hour = int.parse(timeParts[0]);
+      final int minute = int.parse(timeParts[1]);
 
-    String meridiem = 'AM';
-    if (hour >= 12) {
-      meridiem = 'PM';
-      if (hour > 12) hour -= 12;
+      String meridiem = 'AM';
+      if (hour >= 12) {
+        meridiem = 'PM';
+        if (hour > 12) hour -= 12;
+      }
+      if (hour == 0) hour = 12;
+
+      final mm = minute.toString().padLeft(2, '0');
+      time = '$hour:$mm $meridiem';
+    } catch (e) {
+      print(
+          '=\n\nSettings:\nscheduleNotification:\n Time and Date issue:\n $e\n\n');
+      time = '';
     }
-    if (hour == 0) hour = 12;
-
-    final mm = minute.toString().padLeft(2, '0');
-    final time = '$hour:$mm $meridiem';
 
     try {
       Notifications().scheduleNotification(
@@ -132,10 +139,11 @@ Settings:
 }
 
 enum Repeat {
-  daily,
-  weakly,
-  monthly,
-  annually,
+  Never,
+  Daily,
+  Weekly,
+  Monthly,
+  Yearly,
 }
 
 // final Settings settings = Settings();
