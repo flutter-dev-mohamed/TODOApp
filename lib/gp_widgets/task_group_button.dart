@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:todo_app/Pages/home_page.dart';
+import 'package:todo_app/dataBase/data_class.dart';
 import 'package:todo_app/dataBase/task_group_class_mod.dart';
 
 import '../dataBase/task_class_mod.dart';
@@ -61,13 +63,11 @@ class TaskGroupButton extends StatelessWidget {
                   Theme.of(context).colorScheme.onSecondaryContainer,
             ),
             onPressed: () {
-              try {
-                getResultFromDrawer(
-                  groupId: taskGroup.id!,
-                  groupIndex: groupIndex,
-                );
-                Navigator.pop(context);
-              } catch (e) {}
+              getResultFromDrawer(
+                groupId: taskGroup.id!,
+                groupIndex: groupIndex,
+              );
+              Navigator.pop(context);
             },
             child: Text(
               label,
@@ -83,18 +83,20 @@ class TaskGroupButton extends StatelessWidget {
     );
   }
 
+  // to control the Snack bar
+  late ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
+      currentSnackBar;
+
   FocusedMenuItem deleteButton({
     required BuildContext context,
     required Function({
       required TaskGroup taskGroup,
     }) delete,
     required TaskGroup taskGroup,
-    // required Function() rebuild,
   }) {
     List<Task> tasksToDelete;
     return FocusedMenuItem(
       backgroundColor: Theme.of(context).colorScheme.errorContainer,
-      // backgroundColor: Colors.red[400],
       trailingIcon: Icon(
         Icons.delete,
         color: Theme.of(context).colorScheme.error,
@@ -102,8 +104,15 @@ class TaskGroupButton extends StatelessWidget {
       title: const Text('Delete'),
       onPressed: () async {
         tasksToDelete = await delete(taskGroup: taskGroup);
+        // TODO: Navigate after deleting
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) =>
+                HomePage(groupId: Data().taskGroupsList[0].id!, groupIndex: 0),
+          ),
+        );
         try {
-          ScaffoldMessenger.of(context).showSnackBar(
+          currentSnackBar = ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
               content: Row(
@@ -119,6 +128,7 @@ class TaskGroupButton extends StatelessWidget {
                     onPressed: () {
                       undoDeleteTaskGroup(
                           taskGroup: taskGroup, tasksToDelete: tasksToDelete);
+                      currentSnackBar.close();
                     },
                     child: Row(
                       children: [
@@ -128,7 +138,6 @@ class TaskGroupButton extends StatelessWidget {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        // Icon(Icons.undo),
                       ],
                     ),
                   ),
@@ -136,7 +145,9 @@ class TaskGroupButton extends StatelessWidget {
               ),
             ),
           );
-        } catch (e, s) {}
+        } catch (e, s) {
+          const AlertDialog(title: Text('Error in deletion'));
+        }
       },
     );
   }
@@ -144,7 +155,6 @@ class TaskGroupButton extends StatelessWidget {
   FocusedMenuItem edit(
       {required BuildContext context, required TaskGroup taskGroup}) {
     return FocusedMenuItem(
-      // backgroundColor: const Color(0xFFD5E2DE),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       trailingIcon: Icon(
         Icons.edit_rounded,
@@ -152,7 +162,6 @@ class TaskGroupButton extends StatelessWidget {
       ),
       title: const Text('Edit'),
       onPressed: () {
-        // AddTaskGroupTextfield(data: data, taskGroup: taskGroup, rebuild: rebuild);
         editing(true, index);
       },
     );

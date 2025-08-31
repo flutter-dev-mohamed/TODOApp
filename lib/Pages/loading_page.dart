@@ -38,7 +38,6 @@ class _LoadingPageState extends State<LoadingPage> {
           context,
           MaterialPageRoute(
             builder: (context) => HomePage(
-              data: data,
               groupId: 1,
               groupIndex: 0,
             ),

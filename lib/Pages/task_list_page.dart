@@ -8,15 +8,11 @@ import 'package:todo_app/dataBase/data_class.dart';
 class TaskListPage extends StatefulWidget {
   TaskListPage({
     super.key,
-    required this.data,
     required this.groupId,
-    // required this.pageTitle,
     required this.edit,
     required this.scrollController,
   });
-  final Data data;
   final int groupId;
-  // final String pageTitle;
   final Function(bool, Task) edit;
   final ScrollController scrollController;
 
@@ -25,6 +21,8 @@ class TaskListPage extends StatefulWidget {
 }
 
 class _TaskListPageState extends State<TaskListPage> {
+  Data data = Data();
+
   @override
   void initState() {
     super.initState();
@@ -32,24 +30,37 @@ class _TaskListPageState extends State<TaskListPage> {
   }
 
   void onChange(Task task) {
-    widget.data.updateTask(task: task, rebuild: rebuild);
+    data.updateTask(task: task, rebuild: rebuild);
   }
 
   void rebuild() async {
-    await widget.data.loadTasks(groupId: widget.groupId);
+    await data.loadTasks(groupId: widget.groupId);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    if (data.listOfTasks.isEmpty) {
+      return Center(
+        child: Text(
+          'No tasks yet (^_^!)',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.tertiary,
+            fontWeight: FontWeight.bold,
+            fontSize: 25,
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: ListView.builder(
         padding: const EdgeInsets.only(bottom: 50, top: 4),
         controller: widget.scrollController,
-        itemCount: widget.data.listOfTasks.length,
+        itemCount: data.listOfTasks.length,
         itemBuilder: (BuildContext context, index) {
-          Task task = widget.data.listOfTasks[index];
+          Task task = data.listOfTasks[index];
           return Taskcard(
             key: ValueKey(task.id),
             // data: widget.data,

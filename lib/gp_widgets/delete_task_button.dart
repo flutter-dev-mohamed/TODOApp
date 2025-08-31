@@ -11,6 +11,9 @@ class DeleteTaskButton extends StatelessWidget {
   final Function() delete;
   final Function() undoDeleteTask;
 
+  late ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
+      scaffoldFeatureController;
+
   @override
   Widget build(BuildContext context) {
     return SlidableAction(
@@ -22,7 +25,7 @@ class DeleteTaskButton extends StatelessWidget {
       label: 'Delete',
       onPressed: (context) {
         delete();
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldFeatureController = ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
             content: Row(
@@ -37,6 +40,7 @@ class DeleteTaskButton extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     undoDeleteTask();
+                    scaffoldFeatureController.close();
                   },
                   child: Text(
                     'Undo',

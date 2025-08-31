@@ -11,11 +11,9 @@ import 'package:todo_app/settings/settings.dart';
 class HomePage extends StatefulWidget {
   HomePage({
     super.key,
-    required this.data,
     required this.groupId,
     required this.groupIndex,
   });
-  Data data;
   int groupId;
   int groupIndex;
 
@@ -24,13 +22,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Data data = Data();
+
   //  autoscroll to textField
   final ScrollController scrollController = ScrollController();
 
   bool dataLoaded = false;
   Future<void> loadTasksData({required int groupId}) async {
     dataLoaded = false;
-    await widget.data.loadTasks(groupId: groupId);
+    await data.loadTasks(groupId: groupId);
     setState(() {
       dataLoaded = true;
     });
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,
             title: Text(
-              widget.data.taskGroupsList[widget.groupIndex].title,
+              data.taskGroupsList[widget.groupIndex].title,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
@@ -124,19 +124,18 @@ class _HomePageState extends State<HomePage> {
                 : [],
           ),
           drawer: TaskgroupsDrawer(
-            data: widget.data,
+            data: data,
             getResultFromDrawer: getResultFromDrawer,
           ),
           body: TaskListPage(
-            data: widget.data,
-            groupId: widget.data.taskGroupsList[widget.groupIndex].id!,
+            groupId: data.taskGroupsList[widget.groupIndex].id!,
             scrollController: scrollController,
             edit: edit,
           ),
           floatingActionButton: isEditing ? null : floatingActionButton(),
           bottomSheet: isEditing
               ? CustomBottomSheet(
-                  data: widget.data,
+                  data: data,
                   rebuildHomePage: rebuildHomePage,
                   task: taskToEditDate!,
                 )
@@ -157,7 +156,7 @@ class _HomePageState extends State<HomePage> {
           );
           edit(true, task);
           print(task);
-          widget.data.listOfTasks.add(task);
+          data.listOfTasks.add(task);
         });
         WidgetsBinding.instance.addPostFrameCallback((_) {
           scrollController.animateTo(
