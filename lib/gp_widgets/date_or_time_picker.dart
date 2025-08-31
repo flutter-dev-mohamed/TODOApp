@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 
 class DateOrTimePicker extends StatelessWidget {
   DateOrTimePicker({

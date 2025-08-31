@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/dataBase/task_group_class_mod.dart';
+import 'package:TribbianiNotes/dataBase/task_group_class_mod.dart';
 
 class EditTaskGroupButton extends StatefulWidget {
   EditTaskGroupButton({

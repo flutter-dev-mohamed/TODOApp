@@ -1,4 +1,4 @@
-import 'package:todo_app/settings/settings.dart';
+import 'package:TribbianiNotes/settings/settings.dart';
 
 class Task {
   String title;

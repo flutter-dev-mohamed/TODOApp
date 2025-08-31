@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/Pages/date_and_time.dart';
-import 'package:todo_app/dataBase/data_class.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/Pages/date_and_time.dart';
+import 'package:TribbianiNotes/dataBase/data_class.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 
 class CustomBottomSheet extends StatefulWidget {
   CustomBottomSheet({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
-import 'package:todo_app/gp_widgets/date_or_time_picker.dart';
-import 'package:todo_app/gp_widgets/timestamp.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/gp_widgets/date_or_time_picker.dart';
+import 'package:TribbianiNotes/gp_widgets/timestamp.dart';
 
 class DateOption extends StatefulWidget {
   DateOption({

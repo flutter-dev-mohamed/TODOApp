@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:todo_app/Pages/loading_page.dart';
+import 'package:TribbianiNotes/Pages/loading_page.dart';
 
 class IntroductionPage extends StatefulWidget {
   const IntroductionPage({super.key});

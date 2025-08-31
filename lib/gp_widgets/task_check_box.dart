@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 
 class TaskCheckBox extends StatefulWidget {
   TaskCheckBox({

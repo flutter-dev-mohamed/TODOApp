@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/dataBase/data_class.dart';
-import 'package:todo_app/dataBase/task_group_class_mod.dart';
-import 'package:todo_app/gp_widgets/task_group_text_field.dart';
-import 'package:todo_app/gp_widgets/task_group_button.dart';
-import 'package:todo_app/gp_widgets/edit_task_group_button.dart';
-import 'package:todo_app/settings/settings_button.dart';
+import 'package:TribbianiNotes/dataBase/data_class.dart';
+import 'package:TribbianiNotes/dataBase/task_group_class_mod.dart';
+import 'package:TribbianiNotes/gp_widgets/task_group_text_field.dart';
+import 'package:TribbianiNotes/gp_widgets/task_group_button.dart';
+import 'package:TribbianiNotes/gp_widgets/edit_task_group_button.dart';
+import 'package:TribbianiNotes/settings/settings_button.dart';
 import '../dataBase/task_class_mod.dart';
 
 class TaskgroupsDrawer extends StatefulWidget {

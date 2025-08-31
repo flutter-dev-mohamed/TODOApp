@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
-import 'package:todo_app/dataBase/task_group_class_mod.dart';
-import 'package:todo_app/settings/settings.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/dataBase/task_group_class_mod.dart';
+import 'package:TribbianiNotes/settings/settings.dart';
 
 class DatabaseHelper {
   DatabaseHelper._init();

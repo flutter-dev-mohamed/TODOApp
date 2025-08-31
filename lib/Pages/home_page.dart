@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/Pages/date_and_time.dart';
-import 'package:todo_app/Pages/task_list_page.dart';
-import 'package:todo_app/dataBase/data_class.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
-import 'package:todo_app/Pages/taskGroups_drawer.dart';
-import 'package:todo_app/gp_widgets/custom_bottom_sheet.dart';
-import 'package:todo_app/settings/notification.dart';
-import 'package:todo_app/settings/settings.dart';
+import 'package:TribbianiNotes/Pages/date_and_time.dart';
+import 'package:TribbianiNotes/Pages/task_list_page.dart';
+import 'package:TribbianiNotes/dataBase/data_class.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/Pages/taskGroups_drawer.dart';
+import 'package:TribbianiNotes/gp_widgets/custom_bottom_sheet.dart';
+import 'package:TribbianiNotes/settings/notification.dart';
+import 'package:TribbianiNotes/settings/settings.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({

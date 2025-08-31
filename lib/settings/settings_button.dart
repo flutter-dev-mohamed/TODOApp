@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/settings/settings_popup_card.dart';
-import 'package:todo_app/custom_navigator_route/hero_dialog_route.dart';
+import 'package:TribbianiNotes/settings/settings_popup_card.dart';
+import 'package:TribbianiNotes/custom_navigator_route/hero_dialog_route.dart';
 
 class SettingsButton extends StatelessWidget {
   /// {@macro add_todo_button}

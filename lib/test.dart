@@ -1,5 +1,5 @@
-// import 'package:todo_app/dataBase/task_class_mod.dart';
-// import 'package:todo_app/dataBase/data_class.dart';
+// import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
+// import 'package:TribbianiNotes/dataBase/data_class.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
 //

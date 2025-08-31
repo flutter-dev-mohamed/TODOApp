@@ -1,13 +1,13 @@
 // ignore_for_file: must_be_immutable
-import 'package:todo_app/dataBase/data_class.dart';
-import 'package:todo_app/gp_widgets/editable_text_widget.dart';
+import 'package:TribbianiNotes/dataBase/data_class.dart';
+import 'package:TribbianiNotes/gp_widgets/editable_text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/gp_widgets/timestamp.dart';
+import 'package:TribbianiNotes/gp_widgets/timestamp.dart';
 import '../dataBase/task_class_mod.dart';
-import 'package:todo_app/gp_widgets/task_check_box.dart';
-import 'package:todo_app/gp_widgets/delete_task_button.dart';
+import 'package:TribbianiNotes/gp_widgets/task_check_box.dart';
+import 'package:TribbianiNotes/gp_widgets/delete_task_button.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:todo_app/gp_widgets/custom_checkbox.dart';
+import 'package:TribbianiNotes/gp_widgets/custom_checkbox.dart';
 
 const TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,

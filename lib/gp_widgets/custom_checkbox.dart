@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
-import 'package:todo_app/settings/settings.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/settings/settings.dart';
 
 class CustomCheckbox extends StatefulWidget {
   CustomCheckbox({

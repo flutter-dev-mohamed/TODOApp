@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
-import 'package:todo_app/Pages/home_page.dart';
-import 'package:todo_app/dataBase/data_class.dart';
-import 'package:todo_app/dataBase/task_group_class_mod.dart';
+import 'package:TribbianiNotes/Pages/home_page.dart';
+import 'package:TribbianiNotes/dataBase/data_class.dart';
+import 'package:TribbianiNotes/dataBase/task_group_class_mod.dart';
 
 import '../dataBase/task_class_mod.dart';
 

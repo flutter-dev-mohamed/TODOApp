@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:todo_app/gp_widgets/lottie_toggle_button.dart';
-import 'package:todo_app/settings/settings.dart';
+import 'package:TribbianiNotes/gp_widgets/lottie_toggle_button.dart';
+import 'package:TribbianiNotes/settings/settings.dart';
 
 /// Tag-value used for the add todo popup button.
 const String _heroAddTodo = 'add-todo-hero';

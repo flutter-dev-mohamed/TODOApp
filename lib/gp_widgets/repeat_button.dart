@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/Pages/repeat_page.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/Pages/repeat_page.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 
 class RepeatButton extends StatefulWidget {
   RepeatButton({super.key, required this.task});

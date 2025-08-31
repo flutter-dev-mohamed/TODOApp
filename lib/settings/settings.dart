@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
-import 'package:todo_app/theme/theme.dart';
-import 'package:todo_app/theme/util.dart';
-import 'package:todo_app/dataBase/database_helper.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/theme/theme.dart';
+import 'package:TribbianiNotes/theme/util.dart';
+import 'package:TribbianiNotes/dataBase/database_helper.dart';
 
 import 'notification.dart';
 

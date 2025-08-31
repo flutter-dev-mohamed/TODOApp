@@ -1,6 +1,6 @@
-import 'package:todo_app/dataBase/database_helper.dart';
-import 'package:todo_app/dataBase/task_group_class_mod.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/dataBase/database_helper.dart';
+import 'package:TribbianiNotes/dataBase/task_group_class_mod.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 
 class Data {
   List<TaskGroup> taskGroupsList = [];

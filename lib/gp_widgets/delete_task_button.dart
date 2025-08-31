@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:todo_app/dataBase/task_class_mod.dart';
+import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 
 class DeleteTaskButton extends StatelessWidget {
   DeleteTaskButton({

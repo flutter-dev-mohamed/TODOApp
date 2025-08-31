@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/Pages/home_page.dart';
-import 'package:todo_app/dataBase/data_class.dart';
+import 'package:TribbianiNotes/Pages/home_page.dart';
+import 'package:TribbianiNotes/dataBase/data_class.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
