@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todo_app/dataBase/task_class_mod.dart';
 import 'package:todo_app/Pages/task_card.dart';
 import 'package:todo_app/dataBase/data_class.dart';
@@ -41,16 +42,7 @@ class _TaskListPageState extends State<TaskListPage> {
   @override
   Widget build(BuildContext context) {
     if (data.listOfTasks.isEmpty) {
-      return Center(
-        child: Text(
-          'No tasks yet (^_^!)',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.tertiary,
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-          ),
-        ),
-      );
+      return emptyScreen();
     }
 
     return Padding(
@@ -74,6 +66,32 @@ class _TaskListPageState extends State<TaskListPage> {
             // updateTask: updateTask,
           );
         },
+      ),
+    );
+  }
+
+  Widget emptyScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/empty_task_group.svg',
+            height: MediaQuery.of(context).size.width * 0.4,
+          ),
+          const Divider(
+            height: 20,
+            color: Colors.transparent,
+          ),
+          Text(
+            'No Tasks Yet!',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ],
       ),
     );
   }
