@@ -36,7 +36,13 @@ class _TODOAppState extends State<TODOApp> {
   @override
   Widget build(BuildContext context) {
     final Settings settings = Settings();
-    settings.loadSettings();
+    settings.loadSettings().then(
+      (value) {
+        if (settings.onboarding) {
+          setState(() {});
+        }
+      },
+    );
 
     settings.setChangeTheme(rebuild: () {
       setState(() {});
@@ -46,7 +52,7 @@ class _TODOAppState extends State<TODOApp> {
 
     settings.setAppTheme(context);
     return MaterialApp(
-      home: const LoadingPage(),
+      home: settings.onboarding ? IntroductionPage() : LoadingPage(),
       theme: settings.lightTheme,
       darkTheme: settings.darkMode
           ? settings.darkTheme

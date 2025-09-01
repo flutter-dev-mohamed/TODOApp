@@ -12,9 +12,14 @@ class Settings {
     this.dynamicBrightness = true,
     this.darkMode = false,
     this.sendNotifications = false,
+    this.onboarding = false,
   });
   static final Settings _settings = Settings.init();
   factory Settings() => _settings;
+
+  // take a wiled guise what do you think it's for?!
+  bool onboarding = false;
+  // 50$ says you're wrong!
 
   // Settings properties
   bool autoDeleteDoneTask;
@@ -31,6 +36,7 @@ class Settings {
     sendNotifications = savedSettings.sendNotifications;
     dynamicBrightness = savedSettings.dynamicBrightness;
     darkMode = savedSettings.darkMode;
+    onboarding = savedSettings.onboarding;
   }
 
   Future<void> saveSettings() async {
@@ -98,7 +104,7 @@ class Settings {
         body: 'Today, $time',
         dateStr: task.date!,
         timeStr: task.time!,
-        // repeat: task.repeat,
+        repeat: task.repeat,
       );
     } catch (e) {
       print('=\n\nSettings:\nscheduleNotification:\n$e\n\n');
@@ -112,6 +118,7 @@ class Settings {
       'dynamicBrightness': dynamicBrightness ? 1 : 0,
       'darkMode': darkMode ? 1 : 0,
       'sendNotifications': sendNotifications ? 1 : 0,
+      'onboarding': onboarding ? 1 : 0,
     };
   }
 
@@ -122,6 +129,7 @@ class Settings {
       dynamicBrightness: map['dynamicBrightness'] == 1,
       darkMode: map['darkMode'] == 1,
       sendNotifications: map['sendNotifications'] == 1,
+      onboarding: map['onboarding'] == 1,
     );
   }
 
@@ -134,6 +142,7 @@ Settings:
   sendNotifications: $sendNotifications
   dynamicBrightness: $dynamicBrightness
   darkMode: $darkMode
+  onboarding: $onboarding
 ''';
   }
 }
@@ -145,5 +154,3 @@ enum Repeat {
   Monthly,
   Yearly,
 }
-
-// final Settings settings = Settings();

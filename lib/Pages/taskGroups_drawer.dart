@@ -198,7 +198,7 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            'Add a task group',
+            'Add a new group',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary,
             ),

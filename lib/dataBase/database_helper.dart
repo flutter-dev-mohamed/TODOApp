@@ -64,6 +64,7 @@ class DatabaseHelper {
         autoDeleteDoneTask INTEGER,
         dynamicBrightness INTEGER,
         darkMode INTEGER,
+        onboarding INTEGER,
         sendNotifications INTEGER
       )
     ''');
@@ -90,6 +91,7 @@ class DatabaseHelper {
 
       if (settingsMap.isEmpty) {
         Settings _settings = Settings();
+        _settings.onboarding = true;
         await db.insert('settings', _settings.toMap());
 
         settingsMap = await db.query('settings');

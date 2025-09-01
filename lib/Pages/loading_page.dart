@@ -1,3 +1,5 @@
+import 'package:TribbianiNotes/onboarding_screen.dart';
+import 'package:TribbianiNotes/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:TribbianiNotes/Pages/home_page.dart';
 import 'package:TribbianiNotes/dataBase/data_class.dart';
@@ -38,7 +40,7 @@ class _LoadingPageState extends State<LoadingPage> {
           context,
           MaterialPageRoute(
             builder: (context) => HomePage(
-              groupId: 1,
+              groupId: Data().taskGroupsList[0].id!,
               groupIndex: 0,
             ),
           ),
