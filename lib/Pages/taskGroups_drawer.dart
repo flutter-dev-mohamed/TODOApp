@@ -97,7 +97,6 @@ class _TaskgroupsDrawerState extends State<TaskgroupsDrawer> {
                   padding: const EdgeInsets.only(bottom: 80.0),
                   child: ListView.builder(
                     controller: scrollController,
-                    // shrinkWrap: true,
                     itemCount: widget.data.taskGroupsList.length,
                     itemBuilder: (context, index) {
                       TaskGroup taskGroup = widget.data.taskGroupsList[index];

@@ -15,44 +15,35 @@ class Notifications {
   bool get isInitialized => _isInitialized;
   bool get hasPermission => _hasPermission;
 
-  ///This will return:
-  ///0 if all is good.
-  ///1 if Permission was not granted
-  ///2 if there is a problem with initialization
-  ///And if it's 404 then... FUCK ALL!! WHY THE FUCK SHOULD I KNOW!!!!
   Future<void> initNotifications() async {
     if (_isInitialized) return;
-    try {
-      tz.initializeTimeZones();
-      final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
-      const _androidInitSettings = AndroidInitializationSettings(
-        '@mipmap/ic_launcher',
-      );
+    tz.initializeTimeZones();
+    final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
-      const DarwinInitializationSettings _iosInitSettings =
-          DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+    const _androidInitSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
-      const InitializationSettings initializationSettings =
-          InitializationSettings(
-        android: _androidInitSettings,
-        iOS: _iosInitSettings,
-      );
+    const DarwinInitializationSettings _iosInitSettings =
+        DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
 
-      _isInitialized = await _flutterLocalNotificationsPlugin
-              .initialize(initializationSettings) ??
-          false;
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: _androidInitSettings,
+      iOS: _iosInitSettings,
+    );
 
-      _hasPermission = await requestNotificationsPermission();
-      // if (!_hasPermission) return;
-    } catch (e) {
-      print('-\n\nNotification Class:\ninitNotifications:\n$e\n\n');
-    }
+    _isInitialized = await _flutterLocalNotificationsPlugin
+            .initialize(initializationSettings) ??
+        false;
+
+    _hasPermission = await requestNotificationsPermission();
   }
 
   Future<bool> requestNotificationsPermission() async {
@@ -96,28 +87,6 @@ class Notifications {
       android: androidNotificationDetails,
       iOS: iosNotificationDetails,
     );
-  }
-
-  Future<void> sendNotification({
-    int id = 0,
-    String? title,
-    String? body,
-  }) async {
-    if (!_isInitialized) await initNotifications();
-    if (!_hasPermission) {
-      if (!(await requestNotificationsPermission())) return;
-    }
-
-    try {
-      await _flutterLocalNotificationsPlugin.show(
-        id,
-        title,
-        body,
-        await notificationDetails(),
-      );
-    } catch (e) {
-      print('-\n\nError:\n$e\n\n');
-    }
   }
 
   tz.TZDateTime parseToTZDateTime(String dateStr, String timeStr) {

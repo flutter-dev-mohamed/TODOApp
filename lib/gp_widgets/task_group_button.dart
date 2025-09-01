@@ -41,7 +41,6 @@ class TaskGroupButton extends StatelessWidget {
     return Center(
       child: FocusedMenuHolder(
         menuWidth: 150.0,
-        // menuOffset: ,
         onPressed: () {},
         menuItems: [
           edit(
@@ -145,7 +144,7 @@ class TaskGroupButton extends StatelessWidget {
               ),
             ),
           );
-        } catch (e, s) {
+        } catch (e) {
           const AlertDialog(title: Text('Error in deletion'));
         }
       },

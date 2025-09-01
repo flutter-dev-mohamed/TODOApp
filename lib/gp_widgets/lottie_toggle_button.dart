@@ -115,7 +115,6 @@ class _LottieToggleButtonState extends State<LottieToggleButton>
               child: Text(
                 widget.description,
                 softWrap: true,
-                // overflow: TextOverflow.ellipsis,
                 maxLines: null,
                 style: widget.descriptionStyle,
               ),

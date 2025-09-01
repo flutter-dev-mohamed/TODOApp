@@ -37,7 +37,6 @@ class _EditTaskGroupButtonState extends State<EditTaskGroupButton> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _focusNode.dispose();
     _controller.dispose();
@@ -84,7 +83,6 @@ class _EditTaskGroupButtonState extends State<EditTaskGroupButton> {
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
-                      // Icon(Icons.undo),
                     ],
                   ),
                 ),
@@ -105,7 +103,6 @@ class _EditTaskGroupButtonState extends State<EditTaskGroupButton> {
       maxLines: 1,
       onSubmitted: (_) => _saveEdit(),
       onTapOutside: (event) {
-        // FocusScope.of(context).unfocus();
         widget.rebuild();
       },
 

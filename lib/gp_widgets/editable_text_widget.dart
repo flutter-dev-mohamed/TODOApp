@@ -11,7 +11,6 @@ class EditableTextWidget extends StatefulWidget {
     required this.rebuild,
     required this.focusNode,
     required this.controller,
-    // required this.isEditing,
     this.showHint = false,
     this.isTitle = false,
     this.textStyle = const TextStyle(),
@@ -19,7 +18,6 @@ class EditableTextWidget extends StatefulWidget {
   Task task;
   bool showHint;
   bool isTitle;
-  // bool isEditing;
   final TextEditingController controller;
   final FocusNode focusNode;
   final TextStyle textStyle;
@@ -67,8 +65,6 @@ class _EditableTextWidgetState extends State<EditableTextWidget> {
   Widget build(BuildContext context) {
     Color? defaultTextColor = Theme.of(context).textTheme.bodyMedium?.color;
     Color hinTextColor = (defaultTextColor ?? Colors.black).withAlpha(100);
-    // print(
-    //     '-\n\n EditableTextWidget:\n build:\n taskTitle: ${widget.task.title}\n _isEditing: $_isEditing\n widget.task.newTask: ${widget.task.newTask}\n\n');
 
     return _isEditing || widget.task.newTask
         ? textField(hinTextColor)

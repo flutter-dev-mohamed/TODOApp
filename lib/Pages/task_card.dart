@@ -1,17 +1,14 @@
-// ignore_for_file: must_be_immutable
 import 'package:TribbianiNotes/dataBase/data_class.dart';
 import 'package:TribbianiNotes/gp_widgets/editable_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:TribbianiNotes/gp_widgets/timestamp.dart';
 import '../dataBase/task_class_mod.dart';
-import 'package:TribbianiNotes/gp_widgets/task_check_box.dart';
 import 'package:TribbianiNotes/gp_widgets/delete_task_button.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:TribbianiNotes/gp_widgets/custom_checkbox.dart';
 
 const TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
-  // fontSize: 18,
 );
 const TextStyle subTitleStyle = TextStyle(
   fontSize: 13,
@@ -22,7 +19,6 @@ Color? checkBoxColor;
 class Taskcard extends StatefulWidget {
   Taskcard({
     super.key,
-    // required this.data,
     required this.groupId,
     required this.task,
     required this.edit,
@@ -33,7 +29,6 @@ class Taskcard extends StatefulWidget {
   final Function() rebuild;
   final Function(Task) onChange;
   final Function(bool, Task) edit;
-  // Data data;
   int groupId;
   Task task;
 
@@ -66,7 +61,6 @@ class _TaskcardState extends State<Taskcard> {
     widget.edit(isEditing, task);
   }
 
-  // test
   late FocusNode _titleFocusNode;
   late FocusNode _descFocusNode;
   late TextEditingController _titleController;
@@ -123,12 +117,8 @@ class _TaskcardState extends State<Taskcard> {
     widget.rebuild();
   }
 
-  //
-
   @override
   Widget build(BuildContext context) {
-    // print(task.title);
-    // print(task.description);
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: ClipRRect(
@@ -159,14 +149,10 @@ class _TaskcardState extends State<Taskcard> {
                 focusNode: _titleFocusNode,
                 controller: _titleController,
                 rebuild: widget.rebuild,
-
-                // data: data,
                 groupId: widget.groupId,
-                // initText: task.title,
                 isTitle: true,
                 task: widget.task,
                 edit: editCard,
-                // // updateTask: updateTask,
                 textStyle: titleTextStyle,
               ),
               subtitle: Column(
@@ -176,10 +162,8 @@ class _TaskcardState extends State<Taskcard> {
                     EditableTextWidget(
                       focusNode: _descFocusNode,
                       controller: _descController,
-                      // data: data,
                       groupId: widget.groupId,
                       rebuild: widget.rebuild,
-                      // initText: task.description,
                       task: widget.task,
                       edit: editCard,
                       showHint: showHint,

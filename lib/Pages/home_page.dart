@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:TribbianiNotes/Pages/date_and_time.dart';
 import 'package:TribbianiNotes/Pages/task_list_page.dart';
 import 'package:TribbianiNotes/dataBase/data_class.dart';
 import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 import 'package:TribbianiNotes/Pages/taskGroups_drawer.dart';
 import 'package:TribbianiNotes/gp_widgets/custom_bottom_sheet.dart';
-import 'package:TribbianiNotes/settings/notification.dart';
-import 'package:TribbianiNotes/settings/settings.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -37,8 +34,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void rebuildHomePage() {
-    print('-\n\nHomePage:\nrebuild\n\n');
-    // TODO: add the after first frame call
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         loadTasksData(groupId: widget.groupId);
@@ -60,7 +55,6 @@ class _HomePageState extends State<HomePage> {
       isEditing = isEdit;
       taskToEditDate = task;
     });
-    // return isEditing;
   }
 
   void getResultFromDrawer(
@@ -148,7 +142,6 @@ class _HomePageState extends State<HomePage> {
   Widget floatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-        //  TODO: add the insert func
         setState(() {
           Task task = Task(
             title: '',

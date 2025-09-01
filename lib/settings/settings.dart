@@ -30,6 +30,12 @@ class Settings {
   // Theme change callback
   late Function changeTheme;
 
+  void userMSG(BuildContext context, String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
+
   Future<void> loadSettings() async {
     final Settings savedSettings = await DatabaseHelper().getSettings();
     autoDeleteDoneTask = savedSettings.autoDeleteDoneTask;
@@ -40,8 +46,6 @@ class Settings {
   }
 
   Future<void> saveSettings() async {
-    print('\n\n\n----Settings Updated----');
-    print(toString());
     await DatabaseHelper().updateSettings(this);
     loadSettings();
   }
@@ -59,23 +63,24 @@ class Settings {
     changeTheme = rebuild;
   }
 
-  /// Send notification if enabled
-  void sendNotification({
-    required int id,
-    required String? title,
-    String? body,
-  }) {
-    if (!sendNotifications) return;
-    print('-\n\n\nSending Notification...\n\n\n');
+  // /// Send notification if enabled
+  // void sendNotification({
+  //   required int id,
+  //   required String? title,
+  //   String? body,
+  // }) {
+  //   if (!sendNotifications) return;
+  //
+  //   Notifications().sendNotification(
+  //     id: id,
+  //     title: title,
+  //     body: body,
+  //     context,
+  //   );
+  // }
 
-    Notifications().sendNotification(
-      id: id,
-      title: title,
-      body: body,
-    );
-  }
-
-  void scheduleNotification({required Task task}) {
+  void scheduleNotification(
+      {required Task task, required BuildContext context}) async {
     String time;
     try {
       final timeParts = task.time!.split(':');
@@ -92,13 +97,13 @@ class Settings {
       final mm = minute.toString().padLeft(2, '0');
       time = '$hour:$mm $meridiem';
     } catch (e) {
-      print(
-          '=\n\nSettings:\nscheduleNotification:\n Time and Date issue:\n $e\n\n');
+      // Show error to user
+      userMSG(context, 'Failed to schedule notification: ${e.toString()}');
       time = '';
     }
 
     try {
-      Notifications().scheduleNotification(
+      await Notifications().scheduleNotification(
         id: task.id!,
         title: task.title,
         body: 'Today, $time',
@@ -107,7 +112,7 @@ class Settings {
         repeat: task.repeat,
       );
     } catch (e) {
-      print('=\n\nSettings:\nscheduleNotification:\n$e\n\n');
+      userMSG(context, 'Failed to schedule notification: ${e.toString()}');
     }
   }
 

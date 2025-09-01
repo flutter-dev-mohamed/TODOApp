@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
 import 'package:TribbianiNotes/gp_widgets/date_option.dart';
-import 'package:TribbianiNotes/gp_widgets/date_or_time_picker.dart';
 import 'package:TribbianiNotes/gp_widgets/repeat_button.dart';
 import 'package:TribbianiNotes/gp_widgets/time_option.dart';
 import 'package:TribbianiNotes/settings/settings.dart';
@@ -39,7 +38,7 @@ class _DateAndTimeState extends State<DateAndTime> {
             centerTitle: true,
             leading: cancelButton(),
             leadingWidth: 75,
-            actions: [applyButton()],
+            actions: [applyButton(context)],
 
             //
             backgroundColor: Colors.transparent,
@@ -60,7 +59,6 @@ class _DateAndTimeState extends State<DateAndTime> {
                     ),
                     TimeOption(
                       task: widget.taskToEditDate,
-                      // animationController: timePickerAC,
                       rebuild: rebuild,
                     ),
                     const Divider(color: Colors.transparent),
@@ -87,8 +85,7 @@ class _DateAndTimeState extends State<DateAndTime> {
     );
   }
 
-  Widget applyButton() {
-    // TODO: Schedule an notification
+  Widget applyButton(BuildContext context) {
     return TextButton(
       onPressed: () {
         if (widget.taskToEditDate.date == null &&
@@ -96,13 +93,10 @@ class _DateAndTimeState extends State<DateAndTime> {
           Navigator.of(context, rootNavigator: true).pop();
           return;
         }
-        try {
-          widget.updateTask();
-          Settings().scheduleNotification(task: widget.taskToEditDate);
-          Navigator.of(context, rootNavigator: true).pop();
-        } catch (e) {
-          print('=\n\nDateAndTime:\napplyButton:\n$e\n\n');
-        }
+        widget.updateTask();
+        Settings().scheduleNotification(
+            task: widget.taskToEditDate, context: context);
+        Navigator.of(context, rootNavigator: true).pop();
       },
       child: const Text('Apply'),
     );
@@ -117,16 +111,7 @@ class _DateAndTimeState extends State<DateAndTime> {
           end: Offset.zero,
         ).animate(animation);
 
-        final slideOut = Tween<Offset>(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
-        ).animate(animation);
-
-        // print('-\nslideIn: $slideIn\n\n');
-        // print('-\nslidOut: $slideOut\n\n');
-
         return SlideTransition(
-          // position: child.key == const ValueKey('repeat') ? slideIn : slideOut,
           position: slideIn,
           child: FadeTransition(
             opacity: animation,

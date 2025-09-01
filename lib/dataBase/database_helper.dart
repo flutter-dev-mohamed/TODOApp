@@ -14,17 +14,12 @@ class DatabaseHelper {
   Future<Database?> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'tasks.db');
-    try {
-      return await openDatabase(
-        path,
-        version: 1,
-        onConfigure: _onConfigure,
-        onCreate: _onCreate,
-      );
-    } catch (e) {
-      print(
-          '____________________Database did not open!____________________\n$e');
-    }
+    return await openDatabase(
+      path,
+      version: 1,
+      onConfigure: _onConfigure,
+      onCreate: _onCreate,
+    );
   }
 
   Future<void> _onConfigure(Database db) async {
@@ -35,15 +30,14 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     print('_onCreate');
-    try {
-      await db.execute('''
+    await db.execute('''
     CREATE TABLE task_group(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL
       )
     ''');
 
-      await db.execute('''
+    await db.execute('''
       CREATE TABLE tasks(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
@@ -59,7 +53,7 @@ class DatabaseHelper {
       )
     ''');
 
-      await db.execute('''
+    await db.execute('''
       CREATE TABLE settings(
         autoDeleteDoneTask INTEGER,
         dynamicBrightness INTEGER,
@@ -68,11 +62,6 @@ class DatabaseHelper {
         sendNotifications INTEGER
       )
     ''');
-      print(
-          '----------------------------------done creating-----------------------');
-    } catch (e) {
-      print('\n\nError in _onCreate (databaseHelper.dart): \n$e\n\n');
-    }
   }
 
   Future<Database?> get database async {
@@ -85,35 +74,24 @@ class DatabaseHelper {
   //---------------------------------------settings
 
   Future<Settings> getSettings() async {
-    try {
-      final db = await database;
-      List<Map<String, dynamic>> settingsMap = await db!.query('settings');
+    final db = await database;
+    List<Map<String, dynamic>> settingsMap = await db!.query('settings');
 
-      if (settingsMap.isEmpty) {
-        Settings _settings = Settings();
-        _settings.onboarding = true;
-        await db.insert('settings', _settings.toMap());
+    if (settingsMap.isEmpty) {
+      Settings _settings = Settings();
+      _settings.onboarding = true;
+      await db.insert('settings', _settings.toMap());
 
-        settingsMap = await db.query('settings');
-      }
-
-      final settings = Settings.fromMap(settingsMap[0]);
-      return settings;
-    } catch (e) {
-      print(
-          '\n\nError in getSettings (databaseHelper.dart): $Settings()\n$e\n\n');
-      return Settings();
+      settingsMap = await db.query('settings');
     }
+
+    final settings = Settings.fromMap(settingsMap[0]);
+    return settings;
   }
 
   Future<int> updateSettings(Settings settings) async {
-    try {
-      final db = await database;
-      return await db!.update('settings', settings.toMap());
-    } catch (e) {
-      print('\n\nError in _onCreate (databaseHelper.dart): \n$e\n\n');
-      return 105;
-    }
+    final db = await database;
+    return await db!.update('settings', settings.toMap());
   }
 
   //---------------------------------------settings
@@ -140,15 +118,11 @@ class DatabaseHelper {
     );
 
     if (groupMaps.isEmpty) {
-      try {
-        await insertTaskGroup(TaskGroup(title: 'ToDo'));
-        groupMaps = await db!.query(
-          'task_group',
-          orderBy: 'id ASC',
-        );
-      } catch (e) {
-        print('groupTasks is empty ---TaskGroup--- not inserted\n$e');
-      }
+      await insertTaskGroup(TaskGroup(title: 'ToDo'));
+      groupMaps = await db!.query(
+        'task_group',
+        orderBy: 'id ASC',
+      );
     }
     List<TaskGroup> result =
         List.generate(groupMaps.length, (i) => TaskGroup.fromMap(groupMaps[i]));

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:TribbianiNotes/gp_widgets/lottie_toggle_button.dart';
 import 'package:TribbianiNotes/settings/settings.dart';
 
@@ -28,9 +27,6 @@ class _SettingsPopupCardState extends State<SettingsPopupCard> {
         padding: const EdgeInsets.all(32.0),
         child: Hero(
           tag: _heroAddTodo,
-          // createRectTween: (begin, end) {
-          //   return CustomRectTween(begin: begin, end: end);
-          // },
           child: Material(
             color: backgroundColor,
             elevation: 2,

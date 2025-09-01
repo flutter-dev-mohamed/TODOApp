@@ -1,5 +1,3 @@
-import 'package:TribbianiNotes/onboarding_screen.dart';
-import 'package:TribbianiNotes/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:TribbianiNotes/Pages/home_page.dart';
 import 'package:TribbianiNotes/dataBase/data_class.dart';
@@ -18,7 +16,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   Future<void> loadData() async {
     await data.loadTaskGroups();
-    // await data.loadTasks(groupId: data.taskGroupsList[0].id!);
     setState(() {
       dataIsLoaded = true;
     });

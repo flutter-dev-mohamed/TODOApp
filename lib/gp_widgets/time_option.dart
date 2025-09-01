@@ -7,12 +7,10 @@ class TimeOption extends StatefulWidget {
   TimeOption({
     super.key,
     required this.task,
-    // required this.animationController,
     required this.rebuild,
   });
   Task task;
   final void Function() rebuild;
-  // final AnimationController animationController;
 
   @override
   State<TimeOption> createState() => _TimeOptionState();

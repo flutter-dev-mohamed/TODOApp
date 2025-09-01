@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:TribbianiNotes/dataBase/task_class_mod.dart';
@@ -55,15 +53,11 @@ class _TaskListPageState extends State<TaskListPage> {
           Task task = data.listOfTasks[index];
           return Taskcard(
             key: ValueKey(task.id),
-            // data: widget.data,
             task: task,
             groupId: widget.groupId,
             onChange: onChange,
             edit: widget.edit,
             rebuild: rebuild,
-            // addTask: addTask,
-            // deleteTask: deleteTask,
-            // updateTask: updateTask,
           );
         },
       ),
